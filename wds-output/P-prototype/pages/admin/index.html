@@ -1,0 +1,393 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin Portal — ReportIt</title>
+  <link rel="stylesheet" href="../../styles/tokens.css" />
+  <link rel="stylesheet" href="../../styles/base.css" />
+  <link rel="stylesheet" href="../../styles/components.css" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 22.5 L4.5 13.5 A7.5 7.5 0 1 1 19.5 13.5 Z' fill='%232F6F4E'/><circle cx='12' cy='10.5' r='3.5' fill='white'/><path d='M9.7 10.6 L11.3 12.2 L14.4 9' stroke='%232F6F4E' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>" />
+  <style>
+    .admin-hero {
+      background: linear-gradient(180deg, var(--color-brand-soft) 0%, var(--color-bg) 100%);
+      padding: var(--space-12) var(--space-6);
+      border-bottom: 1px solid var(--color-border);
+    }
+    @media (min-width: 1024px) {
+      .admin-hero { padding: var(--space-16) var(--space-8); }
+    }
+    .admin-hero__inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--space-8);
+      align-items: center;
+    }
+    @media (min-width: 1024px) {
+      .admin-hero__inner { grid-template-columns: 1.4fr 1fr; gap: var(--space-12); }
+    }
+    .admin-hero__eyebrow {
+      font-size: var(--text-caption);
+      font-weight: var(--weight-semibold);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--color-brand);
+      margin-bottom: var(--space-3);
+    }
+    .admin-hero__title {
+      font-size: var(--text-display);
+      font-weight: var(--weight-bold);
+      color: var(--color-ink);
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+    }
+    @media (min-width: 1024px) {
+      .admin-hero__title { font-size: 3rem; line-height: 1.1; }
+    }
+    .admin-hero__lede {
+      margin-top: var(--space-4);
+      font-size: var(--text-body);
+      color: var(--color-ink-muted);
+      max-width: 56ch;
+      line-height: 1.6;
+    }
+    .admin-hero__cta {
+      margin-top: var(--space-6);
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-3);
+    }
+    .admin-hero__card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-6);
+      box-shadow: var(--shadow-md);
+    }
+    .admin-hero__card h3 {
+      font-size: var(--text-h3);
+      font-weight: var(--weight-semibold);
+      margin-bottom: var(--space-4);
+      color: var(--color-ink);
+    }
+    .admin-hero__stat {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-4);
+    }
+    .admin-hero__stat-item {
+      padding: var(--space-3);
+      background: var(--color-surface-muted);
+      border-radius: var(--radius-md);
+    }
+    .admin-hero__stat-num {
+      font-size: var(--text-h2);
+      font-weight: var(--weight-bold);
+      color: var(--color-ink);
+      line-height: 1;
+    }
+    .admin-hero__stat-label {
+      font-size: var(--text-caption);
+      color: var(--color-ink-muted);
+      margin-top: var(--space-2);
+    }
+
+    .admin-flow {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: var(--space-12) var(--space-6);
+    }
+    @media (min-width: 1024px) {
+      .admin-flow { padding: var(--space-16) var(--space-8); }
+    }
+    .admin-flow__group { margin-bottom: var(--space-12); }
+    .admin-flow__title {
+      font-size: var(--text-h2);
+      font-weight: var(--weight-semibold);
+      margin-bottom: var(--space-2);
+      color: var(--color-ink);
+    }
+    .admin-flow__sub {
+      color: var(--color-ink-muted);
+      margin-bottom: var(--space-6);
+      font-size: var(--text-body);
+    }
+    .admin-flow__grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: var(--space-4);
+    }
+    .admin-flow__card {
+      display: block;
+      padding: var(--space-5);
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      text-decoration: none;
+      color: inherit;
+      transition: border-color var(--motion-fast), transform var(--motion-fast), box-shadow var(--motion-fast);
+    }
+    .admin-flow__card:hover {
+      border-color: var(--color-brand);
+      text-decoration: none;
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+    .admin-flow__card-name {
+      font-weight: var(--weight-semibold);
+      font-size: var(--text-body);
+      color: var(--color-ink);
+    }
+    .admin-flow__card-note {
+      margin-top: var(--space-2);
+      font-size: var(--text-body-sm);
+      color: var(--color-ink-muted);
+      line-height: 1.5;
+    }
+    .admin-flowchain {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: var(--space-3);
+    }
+    .admin-flowchain__step {
+      padding: var(--space-5);
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+      transition: border-color var(--motion-fast), transform var(--motion-fast), box-shadow var(--motion-fast);
+    }
+    .admin-flowchain__step:hover {
+      border-color: var(--color-brand);
+      text-decoration: none;
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-sm);
+    }
+    .admin-flowchain__num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px; height: 24px;
+      border-radius: var(--radius-pill);
+      background: var(--color-brand-soft);
+      color: var(--color-brand);
+      font-size: var(--text-caption);
+      font-weight: var(--weight-semibold);
+    }
+    .admin-flowchain__name { font-weight: var(--weight-semibold); font-size: var(--text-body-sm); color: var(--color-ink); }
+    .admin-flowchain__role { font-size: var(--text-caption); color: var(--color-ink-muted); line-height: 1.4; }
+
+    .admin-topbar {
+      background: var(--color-surface);
+      border-bottom: 1px solid var(--color-border);
+      padding: var(--space-3) var(--space-6);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .admin-topbar__inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: var(--space-6);
+      flex-wrap: wrap;
+    }
+    .admin-topbar__links { flex: 1; }
+  </style>
+</head>
+<body class="civ-page civ-page--dashboard">
+  <a class="civ-skip" href="#main">Skip to main content</a>
+
+  <!-- Site nav -->
+  <nav class="admin-topbar" aria-label="Primary">
+    <div class="admin-topbar__inner">
+      <a class="civ-logo civ-logo--dashboard" href="index.html">
+        <span class="civ-logo__mark" aria-hidden="true"></span>
+        <span class="civ-logo__words">
+          <span class="civ-logo__primary">ReportIt</span>
+          <span class="civ-logo__sub">[Your City] · Admin Portal</span>
+        </span>
+      </a>
+
+      <div class="admin-topbar__links">
+        <nav class="civ-nav" aria-label="Sections">
+          <a class="civ-nav__item civ-nav__item--active" href="index.html">Overview</a>
+          <a class="civ-nav__item" href="01-sign-in.html">Sign in</a>
+        </nav>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <header class="admin-hero">
+    <div class="admin-hero__inner">
+      <div>
+        <div class="admin-hero__eyebrow">Admin Portal</div>
+        <h1 class="admin-hero__title">Triage and resolve reports,<br/>all in one queue.</h1>
+        <p class="admin-hero__lede">
+          The Admin Portal gives Public Works staff a fast, focused view of every report submitted in [Your City]. Acknowledge in two clicks, set priority, and keep citizens informed — without leaving the queue.
+        </p>
+        <div class="admin-hero__cta">
+          <a class="civ-btn civ-btn--primary" href="01-sign-in.html">
+            Sign in to the admin portal →
+          </a>
+          <a class="civ-btn civ-btn--ghost" href="02-queue.html">
+            Jump to queue
+          </a>
+        </div>
+      </div>
+
+      <aside class="admin-hero__card">
+        <h3>Today's snapshot</h3>
+        <div class="admin-hero__stat">
+          <div class="admin-hero__stat-item">
+            <div class="admin-hero__stat-num">5</div>
+            <div class="admin-hero__stat-label">Need acknowledgment</div>
+          </div>
+          <div class="admin-hero__stat-item">
+            <div class="admin-hero__stat-num">3</div>
+            <div class="admin-hero__stat-label">Acknowledged</div>
+          </div>
+          <div class="admin-hero__stat-item">
+            <div class="admin-hero__stat-num">2</div>
+            <div class="admin-hero__stat-label">In progress</div>
+          </div>
+          <div class="admin-hero__stat-item">
+            <div class="admin-hero__stat-num">1</div>
+            <div class="admin-hero__stat-label">Disputed</div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </header>
+
+  <main id="main" class="admin-flow">
+
+    <!-- End-to-end flow -->
+    <section class="admin-flow__group">
+      <h2 class="admin-flow__title">A typical day in the admin portal</h2>
+      <p class="admin-flow__sub">Sign in. Triage. Resolve. Each step is two clicks or fewer.</p>
+      <div class="admin-flowchain">
+        <a class="admin-flowchain__step" href="01-sign-in.html">
+          <span class="admin-flowchain__num">1</span>
+          <span class="admin-flowchain__name">Sign in</span>
+          <span class="admin-flowchain__role">Email + password</span>
+        </a>
+        <a class="admin-flowchain__step" href="02-queue.html">
+          <span class="admin-flowchain__num">2</span>
+          <span class="admin-flowchain__name">Queue</span>
+          <span class="admin-flowchain__role">All reports, sortable</span>
+        </a>
+        <a class="admin-flowchain__step" href="02-queue-bulk.html">
+          <span class="admin-flowchain__num">3</span>
+          <span class="admin-flowchain__name">Bulk acknowledge</span>
+          <span class="admin-flowchain__role">3 rows selected</span>
+        </a>
+        <a class="admin-flowchain__step" href="03-report-detail.html">
+          <span class="admin-flowchain__num">4</span>
+          <span class="admin-flowchain__name">Report detail</span>
+          <span class="admin-flowchain__role">Drawer with priority + notes</span>
+        </a>
+        <a class="admin-flowchain__step" href="02-queue-filters.html">
+          <span class="admin-flowchain__num">5</span>
+          <span class="admin-flowchain__name">Filters</span>
+          <span class="admin-flowchain__role">Advanced filters</span>
+        </a>
+        <a class="admin-flowchain__step" href="02-queue-account.html">
+          <span class="admin-flowchain__num">6</span>
+          <span class="admin-flowchain__name">Account</span>
+          <span class="admin-flowchain__role">Menu popover + sign out</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- Edge cases -->
+    <section class="admin-flow__group">
+      <h2 class="admin-flow__title">Edge cases</h2>
+      <p class="admin-flow__sub">Empty states, no-match filters, and other states the queue can land in.</p>
+      <div class="admin-flow__grid">
+        <a class="admin-flow__card" href="02-queue-empty.html">
+          <div class="admin-flow__card-name">Queue — Filter returns 0</div>
+          <div class="admin-flow__card-note">No reports match your current filters.</div>
+        </a>
+        <a class="admin-flow__card" href="06-empty-state.html">
+          <div class="admin-flow__card-name">Empty queue</div>
+          <div class="admin-flow__card-note">Empty queue with filters active, or with no reports yet.</div>
+        </a>
+        <a class="admin-flow__card" href="03-report-detail.html">
+          <div class="admin-flow__card-name">Resolution form</div>
+          <div class="admin-flow__card-note">Open the Mark Resolved modal from the detail page.</div>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer (reuse site-footer styles from root index.html via embedded styles) -->
+  <footer class="civ-site-footer">
+    <div class="civ-site-footer__inner">
+      <div class="civ-site-footer__brand">
+        <span class="civ-logo__primary">ReportIt</span>
+        <span class="civ-logo__sub">Admin Portal · [Your City] · Public Works</span>
+      </div>
+      <nav class="civ-site-footer__links" aria-label="Footer">
+        <a href="#" onclick="event.preventDefault(); CIV.toast('Privacy policy')">Privacy</a>
+        <a href="#" onclick="event.preventDefault(); CIV.toast('Accessibility statement')">Accessibility</a>
+        <a href="mailto:admin@city.gov">Internal support</a>
+      </nav>
+      <div class="civ-site-footer__legal">
+        © 2026 ReportIt · [Your City]. Internal use only.
+      </div>
+    </div>
+  </footer>
+
+  <style>
+    .civ-site-footer {
+      margin-top: 0;
+      padding: var(--space-10) var(--space-6);
+      background: var(--color-surface-muted);
+      border-top: 1px solid var(--color-border);
+    }
+    .civ-site-footer__inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--space-5);
+      align-items: start;
+    }
+    @media (min-width: 768px) {
+      .civ-site-footer__inner {
+        grid-template-columns: 2fr 2fr 1fr;
+        align-items: center;
+      }
+    }
+    .civ-site-footer__brand { display: flex; flex-direction: column; gap: 2px; }
+    .civ-site-footer__links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-5);
+      font-size: var(--text-body-sm);
+    }
+    .civ-site-footer__links a {
+      color: var(--color-ink-muted);
+      text-decoration: none;
+    }
+    .civ-site-footer__links a:hover { color: var(--color-brand); text-decoration: underline; }
+    .civ-site-footer__legal {
+      font-size: var(--text-caption);
+      color: var(--color-ink-subtle);
+      text-align: left;
+    }
+    @media (min-width: 768px) {
+      .civ-site-footer__legal { text-align: right; }
+    }
+  </style>
+</body>
+</html>

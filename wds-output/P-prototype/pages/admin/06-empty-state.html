@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Queue — [Your City] ReportIt</title>
+  <link rel="stylesheet" href="../../styles/tokens.css" />
+  <link rel="stylesheet" href="../../styles/base.css" />
+  <link rel="stylesheet" href="../../styles/components.css" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 22.5 L4.5 13.5 A7.5 7.5 0 1 1 19.5 13.5 Z' fill='%232F6F4E'/><circle cx='12' cy='10.5' r='3.5' fill='white'/><path d='M9.7 10.6 L11.3 12.2 L14.4 9' stroke='%232F6F4E' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>" />
+  <script defer src="../../scripts/app.js"></script>
+  <script defer src="../../scripts/interactions.js"></script>
+</head>
+<body class="civ-page civ-page--dashboard">
+  <a class="civ-skip" href="#main">Skip to main content</a>
+  <header class="civ-topbar">
+    <div class="civ-container civ-container--dashboard civ-topbar__inner">
+      <a class="civ-logo civ-logo--dashboard civ-topbar__brand" href="../admin/index.html">
+        <span class="civ-logo__mark" aria-hidden="true"></span>
+        <span class="civ-logo__words">
+          <span class="civ-logo__primary">ReportIt</span>
+          <span class="civ-logo__sub">[Your City] · Admin Portal</span>
+        </span>
+      </a>
+
+      <nav class="civ-nav" aria-label="Primary" style="flex:1; justify-content:center;">
+        <a class="civ-nav__item" href="02-queue.html">Queue</a>
+        <a class="civ-nav__item" href="#" onclick="event.preventDefault(); CIV.toast('My Work — coming soon')">My Work</a>
+        <a class="civ-nav__item" href="#" onclick="event.preventDefault(); CIV.toast('Reports — coming soon')">Reports</a>
+      </nav>
+
+      <div style="position:relative;">
+        <button class="civ-avatar" aria-label="Account">CM</button>
+      </div>
+    </div>
+  </header>
+  <main id="main" class="civ-page__main">
+    <div class="civ-container civ-container--xl">
+      <div class="civ-pagetitle">
+        <h1 class="t-h1">Queue</h1>
+        <span class="civ-pagetitle__count">0 reports</span>
+      </div>
+
+      <!-- Empty state: No reports yet -->
+      <div class="civ-empty">
+        <div class="civ-empty__icon" aria-hidden="true">📋</div>
+        <h2 class="civ-empty__title">No reports yet.</h2>
+        <p class="civ-empty__body">When citizens submit issues, they'll appear here. This page will update automatically.</p>
+        <p class="civ-empty__subtle">If you just signed in, this might mean everything has been triaged — nice work.</p>
+        <div style="margin-top:var(--space-8);display:flex;align-items:center;justify-content:center;gap:var(--space-2);">
+          <span class="civ-spinner civ-spinner--sm"></span>
+          <span class="t-caption t-muted">Checking for new reports…</span>
+        </div>
+      </div>
+
+      <hr style="margin-block:var(--space-12);" />
+
+      <!-- Empty state: No matches -->
+      <div class="civ-empty">
+        <div class="civ-empty__icon" aria-hidden="true">🔍</div>
+        <h2 class="civ-empty__title">No reports match your filters.</h2>
+        <p class="civ-empty__body">Try removing a filter or broadening your date range.</p>
+        <div class="civ-activefilters" style="justify-content:center;margin-bottom:var(--space-5);">
+          <span class="civ-activefilters__label">Active:</span>
+          <button class="civ-chip civ-chip--active">Pothole <span class="civ-chip__remove">×</span></button>
+          <button class="civ-chip civ-chip--active">High <span class="civ-chip__remove">×</span></button>
+          <button class="civ-chip civ-chip--active">Last 7 days <span class="civ-chip__remove">×</span></button>
+        </div>
+        <div class="civ-empty__actions">
+          <button class="civ-btn civ-btn--secondary">Clear all filters</button>
+          <button class="civ-btn civ-btn--ghost" onclick="CIV.openDrawer('filtersDrawer')">Adjust filters</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Filters Drawer (re-used) -->
+  <div class="civ-drawer-backdrop" id="filtersBackdrop"></div>
+  <aside class="civ-drawer civ-drawer--left" id="filtersDrawer" role="dialog" aria-modal="true" aria-label="Filters">
+    <div class="civ-drawer__header">
+      <h2 class="t-h3">Filters</h2>
+      <div style="display:flex;align-items:center;gap:var(--space-3);">
+        <button class="t-body-sm t-brand">Reset</button>
+        <button class="civ-close-btn" onclick="CIV.closeDrawer('filtersDrawer')" aria-label="Close">×</button>
+      </div>
+    </div>
+    <div class="civ-drawer__body">
+      <p class="t-body-sm t-muted">Drawer content mirrors the Queue's Filters Drawer.</p>
+    </div>
+    <div class="civ-drawer__footer">
+      <div style="display:flex;justify-content:flex-end;gap:var(--space-3);">
+        <button class="civ-btn civ-btn--ghost" onclick="CIV.closeDrawer('filtersDrawer')">Cancel</button>
+        <button class="civ-btn civ-btn--primary" onclick="CIV.closeDrawer('filtersDrawer')">Apply</button>
+      </div>
+    </div>
+  </aside>
+</body>
+</html>

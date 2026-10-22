@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>See your reports — [Your City] ReportIt</title>
+  <link rel="stylesheet" href="../../styles/tokens.css" />
+  <link rel="stylesheet" href="../../styles/base.css" />
+  <link rel="stylesheet" href="../../styles/components.css" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 22.5 L4.5 13.5 A7.5 7.5 0 1 1 19.5 13.5 Z' fill='%232F6F4E'/><circle cx='12' cy='10.5' r='3.5' fill='white'/><path d='M9.7 10.6 L11.3 12.2 L14.4 9' stroke='%232F6F4E' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>" />
+  <script defer src="../../scripts/app.js"></script>
+  <script defer src="../../scripts/interactions.js"></script>
+</head>
+<body class="civ-page civ-page--citizen">
+  <a class="civ-skip" href="#main">Skip to main content</a>
+
+  <div class="civ-shell-citizen">
+
+    <!-- Left rail (md+) -->
+    <aside class="civ-rail" aria-label="Primary">
+      <a class="civ-logo civ-logo--citizen" href="../../index.html">
+        <span class="civ-logo__mark" aria-hidden="true"></span>
+        <span class="civ-logo__words">
+          <span class="civ-logo__primary">ReportIt</span>
+          <span class="civ-logo__sub">[Your City] · Public Works</span>
+        </span>
+      </a>
+
+      <nav class="civ-rail__nav" aria-label="Sections">
+        <a class="civ-nav__item" href="01-submit.html">📝 Report a problem</a>
+        <a class="civ-nav__item civ-nav__item--active" href="04-personal-history.html">📋 My reports</a>
+        <a class="civ-nav__item" href="#" onclick="event.preventDefault(); CIV.toast('Help center')">❓ Help</a>
+        <a class="civ-nav__item" href="#" onclick="event.preventDefault(); CIV.toast('About this service')">ℹ About</a>
+      </nav>
+
+      <div class="civ-rail__footer">
+        <strong>Need help?</strong>
+        Call <a href="tel:+15555550199">(555) 555-0199</a><br>
+        Mon–Fri 8am–6pm
+      </div>
+    </aside>
+
+    <!-- Mobile header (base/sm only) -->
+    <div class="civ-shell-citizen__main">
+      <header class="civ-mobile-header">
+        <a class="civ-logo civ-logo--citizen" href="../../index.html">
+          <span class="civ-logo__mark" aria-hidden="true"></span>
+          <span class="civ-logo__words">
+            <span class="civ-logo__primary">ReportIt</span>
+            <span class="civ-logo__sub">[Your City] · Public Works</span>
+          </span>
+        </a>
+        <a class="civ-nav__item" href="01-submit.html" style="font-size:var(--text-body-sm);">+ Report</a>
+      </header>
+
+      <main id="main" class="civ-shell-citizen__content">
+    <div class="civ-container civ-container--citizen" style="padding-top:var(--space-12);">
+      <div class="civ-empty" style="padding:0;">
+        <div class="civ-empty__icon" aria-hidden="true">✉️</div>
+        <h1 class="t-h1">See all your reports</h1>
+        <p class="t-body t-muted" style="margin-block:var(--space-3) var(--space-6);max-width:380px;margin-inline:auto;">
+          Enter your email and we'll send you a link. It expires in 15 minutes and can only be used once.
+        </p>
+        <form id="magicForm" class="civ-stack" style="max-width:360px;margin-inline:auto;">
+          <input type="email" class="civ-input" placeholder="you@example.com" required autocomplete="email" />
+          <button type="submit" class="civ-btn civ-btn--primary civ-btn--full">Send me the link</button>
+        </form>
+        <div id="magicResult" style="margin-top:var(--space-4);"></div>
+      </div>
+    </div>
+      </main>
+    </div>
+  </div>
+  <script>
+    document.getElementById('magicForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      document.getElementById('magicResult').innerHTML =
+        '<div class="civ-banner civ-banner--success"><span class="civ-banner__icon">✓</span><div>If that email matches a report, a link is on its way. Check your inbox.</div></div>';
+    });
+  </script>
+</body>
+</html>

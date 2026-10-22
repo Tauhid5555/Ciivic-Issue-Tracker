@@ -1,0 +1,655 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ReportIt — Project Presentation</title>
+<style>
+  :root {
+    --brand: #2F6F4E;
+    --brand-soft: #E8F1EA;
+    --brand-deep: #1F4D34;
+    --ink: #1B1F1D;
+    --ink-muted: #5A6661;
+    --surface: #FAF7F2;
+    --surface-2: #F2EEE6;
+    --line: #E4DED1;
+    --warn: #B85A1C;
+    --info: #2D5DA1;
+    --code-bg: #1F2A24;
+    --code-ink: #E8F1EA;
+    --shadow: 0 1px 2px rgba(20, 30, 25, 0.04), 0 6px 24px rgba(20, 30, 25, 0.06);
+    --radius: 12px;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: var(--ink);
+    background: var(--surface);
+    line-height: 1.55;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px 80px; }
+
+  /* ---------- Header ---------- */
+  header.hero {
+    background: linear-gradient(180deg, var(--brand-soft) 0%, var(--surface) 100%);
+    border-bottom: 1px solid var(--line);
+    padding: 56px 0 40px;
+  }
+  header.hero .wrap { padding-bottom: 0; }
+  .eyebrow {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--brand);
+    background: rgba(47, 111, 78, 0.08);
+    padding: 4px 10px;
+    border-radius: 999px;
+    margin-bottom: 16px;
+  }
+  h1 { font-size: 36px; line-height: 1.15; margin: 0 0 12px; letter-spacing: -0.02em; }
+  .lede { font-size: 18px; color: var(--ink-muted); max-width: 720px; margin: 0 0 24px; }
+  .meta { display: flex; flex-wrap: wrap; gap: 16px; font-size: 14px; color: var(--ink-muted); }
+  .meta b { color: var(--ink); font-weight: 600; }
+
+  /* ---------- Nav ---------- */
+  nav.toc {
+    position: sticky;
+    top: 0;
+    background: rgba(250, 247, 242, 0.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+    z-index: 10;
+  }
+  nav.toc ul {
+    list-style: none;
+    margin: 0;
+    padding: 12px 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 8px;
+    font-size: 13px;
+  }
+  nav.toc a {
+    color: var(--ink-muted);
+    text-decoration: none;
+    padding: 4px 10px;
+    border-radius: 6px;
+    transition: background 0.15s, color 0.15s;
+  }
+  nav.toc a:hover { background: var(--brand-soft); color: var(--brand-deep); }
+
+  /* ---------- Sections ---------- */
+  section { padding: 56px 0 16px; border-bottom: 1px dashed var(--line); }
+  section:last-of-type { border-bottom: none; }
+  h2 {
+    font-size: 26px;
+    margin: 0 0 8px;
+    letter-spacing: -0.01em;
+    scroll-margin-top: 64px;
+  }
+  h2 .num {
+    display: inline-block;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    color: var(--brand);
+    font-size: 14px;
+    background: var(--brand-soft);
+    padding: 2px 8px;
+    border-radius: 6px;
+    margin-right: 12px;
+    vertical-align: 3px;
+  }
+  h3 { font-size: 17px; margin: 28px 0 8px; color: var(--brand-deep); }
+  h4 { font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-muted); margin: 18px 0 6px; }
+  p { margin: 8px 0; }
+  .lead { font-size: 17px; color: var(--ink-muted); margin-bottom: 24px; }
+
+  /* ---------- Cards / Grids ---------- */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+    margin: 20px 0;
+  }
+  .card {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 18px;
+    box-shadow: var(--shadow);
+  }
+  .card .tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--brand);
+    background: var(--brand-soft);
+    padding: 3px 8px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+  }
+  .card h4 { margin-top: 0; color: var(--ink); text-transform: none; letter-spacing: normal; font-size: 16px; }
+  .card p { color: var(--ink-muted); font-size: 14px; margin: 6px 0 0; }
+
+  /* ---------- Process flow diagram ---------- */
+  .flow {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 8px;
+    margin: 24px 0;
+  }
+  .flow .step {
+    background: white;
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--brand);
+    padding: 12px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+  }
+  .flow .step .label { font-weight: 600; color: var(--brand-deep); font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; }
+  .flow .step .what { color: var(--ink-muted); margin-top: 4px; font-size: 12px; }
+
+  /* ---------- Skill table ---------- */
+  table.skills {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    margin: 20px 0;
+    font-size: 14px;
+  }
+  table.skills th, table.skills td {
+    text-align: left;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+  table.skills thead th {
+    background: var(--surface-2);
+    font-weight: 600;
+    color: var(--brand-deep);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  table.skills tbody tr:last-child td { border-bottom: none; }
+  table.skills tbody tr:hover { background: var(--brand-soft); }
+  table.skills code {
+    background: var(--surface-2);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+  }
+  table.skills .agent { font-weight: 600; color: var(--brand-deep); white-space: nowrap; }
+  table.skills .purpose { color: var(--ink-muted); }
+
+  /* ---------- Status pills ---------- */
+  .pill {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 999px;
+    margin: 2px 4px 2px 0;
+  }
+  .pill.submitted   { background: #E8EEF6; color: #2D5DA1; }
+  .pill.acknowledged{ background: #F1ECDE; color: #8A6E1F; }
+  .pill.in-progress { background: #FCEDD6; color: #B85A1C; }
+  .pill.resolved    { background: #E8F1EA; color: #2F6F4E; }
+  .pill.disputed    { background: #F7E1E1; color: #A02A2A; }
+  .pill.duplicate   { background: #EDEAE4; color: #5A6661; }
+
+  /* ---------- Code block ---------- */
+  pre {
+    background: var(--code-bg);
+    color: var(--code-ink);
+    padding: 16px;
+    border-radius: var(--radius);
+    overflow-x: auto;
+    font-size: 13px;
+    line-height: 1.5;
+    margin: 12px 0;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+  }
+  code:not(pre code) {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 13px;
+    background: var(--surface-2);
+    padding: 1px 6px;
+    border-radius: 4px;
+    color: var(--brand-deep);
+  }
+
+  /* ---------- Lists ---------- */
+  ul.checks { list-style: none; padding-left: 0; }
+  ul.checks li {
+    position: relative;
+    padding-left: 26px;
+    margin: 8px 0;
+    color: var(--ink-muted);
+  }
+  ul.checks li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--brand);
+    font-weight: 700;
+  }
+  ul.bullets { color: var(--ink-muted); }
+  ul.bullets li { margin: 6px 0; }
+
+  /* ---------- Phase timeline ---------- */
+  .timeline { position: relative; margin: 24px 0; padding-left: 28px; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 10px; top: 6px; bottom: 6px;
+    width: 2px;
+    background: var(--line);
+  }
+  .timeline .entry { position: relative; margin-bottom: 18px; }
+  .timeline .entry::before {
+    content: '';
+    position: absolute;
+    left: -22px; top: 6px;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--brand);
+    border: 2px solid var(--surface);
+  }
+  .timeline .entry .date {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 12px;
+    color: var(--brand);
+    margin-bottom: 2px;
+  }
+  .timeline .entry .title { font-weight: 600; color: var(--ink); }
+  .timeline .entry .body { color: var(--ink-muted); font-size: 14px; margin-top: 2px; }
+
+  /* ---------- Footer ---------- */
+  footer {
+    padding: 40px 0 0;
+    color: var(--ink-muted);
+    font-size: 13px;
+    text-align: center;
+  }
+  footer p { margin: 4px 0; }
+
+  @media (max-width: 600px) {
+    h1 { font-size: 28px; }
+    h2 { font-size: 22px; }
+    header.hero { padding: 32px 0 24px; }
+    section { padding: 40px 0 8px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="eyebrow">ReportIt · Project Summary</span>
+    <h1>ReportIt project summary</h1>
+    <p class="lede">
+      What was built, how it was built, and which BMAD/WDS skills were used.
+    </p>
+    <div class="meta">
+      <span><b>Project:</b> ReportIt (Civic Issue Reporter &amp; Tracker)</span>
+      <span><b>Owner:</b> Tauhid</span>
+      <span><b>Date:</b> 2026-09-06</span>
+      <span><b>Phase:</b> 4 → 5 (UX Design → Prototype)</span>
+    </div>
+  </div>
+</header>
+
+<nav class="toc">
+  <div class="wrap">
+    <ul>
+      <li><a href="#what">What we built</a></li>
+      <li><a href="#how">How we built it</a></li>
+      <li><a href="#skills">BMAD &amp; WDS skills map</a></li>
+      <li><a href="#process">Process timeline</a></li>
+      <li><a href="#artifacts">Artifacts produced</a></li>
+      <li><a href="#decisions">Decisions along the way</a></li>
+      <li><a href="#next">What's next</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<!-- ============================================================ -->
+<section id="what">
+  <h2><span class="num">01</span>What we built</h2>
+  <p class="lead">
+    A civic-issue tracking system with two portals — one for residents, one for staff.
+    Every screen is clickable; no backend required to demo.
+  </p>
+
+  <h3>Two portals, one shared model</h3>
+  <div class="grid">
+    <div class="card">
+      <span class="tag">Portal 01</span>
+      <h4>Citizen Portal</h4>
+      <p>Resident flow: submit a report, receive a Tracking ID,
+        follow status, dispute a fix, view personal history via magic-link.</p>
+      <p style="font-size:12px; margin-top:10px;">
+        <span class="pill submitted">Submitted</span>
+        <span class="pill acknowledged">Acknowledged</span>
+        <span class="pill in-progress">In Progress</span>
+        <span class="pill resolved">Resolved</span>
+        <span class="pill disputed">Disputed</span>
+      </p>
+    </div>
+    <div class="card">
+      <span class="tag">Portal 02</span>
+      <h4>Admin Portal</h4>
+      <p>Staff workspace: queue with bulk actions, report-detail drawer
+        with status workflow, advanced filters, account/sign-out.</p>
+      <p style="font-size:12px; margin-top:10px;">
+        <span class="pill duplicate">Duplicate</span> · 32 demo reports · 8 categories
+      </p>
+    </div>
+  </div>
+
+  <h3>The prototype</h3>
+  <ul class="bullets">
+    <li><b>23 screens</b> — 13 Citizen Portal + 8 Admin Portal + flow map + root overview.</li>
+    <li><b>15 page specs</b> in <code>C-UX-Scenarios/</code>, each realized 1:1 as a screen.</li>
+    <li><b>32 demo reports</b> across every category, every status, mixed priority, last 30 days.</li>
+    <li><b>Live interactivity</b> — filter, sort, paginate, single-row actions, bulk actions, notes, toasts, lightbox.</li>
+    <li><b>Zero backend</b> — pure HTML + CSS + JS. Open <code>index.html</code> in any browser.</li>
+    <li><b>Responsive</b> — Citizen Portal stays narrow with enrichment at lg+; Admin Portal gains a sidebar at xl+.</li>
+  </ul>
+</section>
+
+<!-- ============================================================ -->
+<section id="how">
+  <h2><span class="num">02</span>How we built it</h2>
+  <p class="lead">
+    A single-day pipeline. Each phase has a dedicated BMAD skill and writes into a folder the next phase consumes.
+  </p>
+
+  <div class="flow">
+    <div class="step"><div class="label">Phase 0</div><div class="what">Setup, design log, conventions</div></div>
+    <div class="step"><div class="label">Phase 1</div><div class="what">Product brief + vision</div></div>
+    <div class="step"><div class="label">Phase 2</div><div class="what">Trigger map (user psychology)</div></div>
+    <div class="step"><div class="label">Phase 3</div><div class="what">Scenarios (Citizen + Admin)</div></div>
+    <div class="step"><div class="label">Phase 4</div><div class="what">UX design: tokens, components, patterns, page specs</div></div>
+    <div class="step"><div class="label">Phase 5</div><div class="what">Clickable HTML prototype</div></div>
+    <div class="step"><div class="label">Phase 6</div><div class="what">Visual assets (planned)</div></div>
+    <div class="step"><div class="label">Phase 7</div><div class="what">Design system package (planned)</div></div>
+  </div>
+
+  <h3>The artifact chain</h3>
+  <p>Every folder in <code>wds-output/</code> has a job:</p>
+  <ul class="bullets">
+    <li><code>A-Product-Brief/</code> — the strategic "why".</li>
+    <li><code>B-Trigger-Map/</code> — users, triggers, success criteria.</li>
+    <li><code>C-UX-Scenarios/01-citizen-portal/</code>, <code>02-authority-dashboard/</code> — per-page specs.</li>
+    <li><code>D-Design-System/</code> — concept, tokens, components, patterns.</li>
+    <li><code>H-handover/</code> — developer entry point.</li>
+    <li><code>P-prototype/</code> — clickable artifact.</li>
+    <li><code>W-visual-mockups/</code> — ASCII wireframes.</li>
+    <li><code>_progress/</code> — design log + audit reports.</li>
+  </ul>
+</section>
+
+<!-- ============================================================ -->
+<section id="skills">
+  <h2><span class="num">03</span>BMAD &amp; WDS skills — who did what</h2>
+  <p class="lead">
+    Two modules were active: <code>bmm</code> (software-development team) and <code>wds</code> (Web Design Studio).
+    WDS replaces BMM's UX Designer with Freya and adds Saga as a dedicated analyst.
+  </p>
+
+  <table class="skills">
+    <thead>
+      <tr>
+        <th>Phase</th>
+        <th>Agent / Skill</th>
+        <th>What it produced here</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><b>0 — Setup</b></td>
+        <td><span class="agent">WDS · 0-project-setup</span></td>
+        <td class="purpose">Created the <code>wds-output/</code> skeleton (8 artifact folders), seeded <code>_progress/00-design-log.md</code>, locked the folder-guide templates for each artifact.</td>
+      </tr>
+      <tr>
+        <td><b>1 — Product Brief</b></td>
+        <td><span class="agent">Saga 📚 · WDS Analyst</span><br/><code>1-project-brief</code></td>
+        <td class="purpose">Discovery conversation → product brief with vision, users, concept, positioning. North-star document that coordinates every later phase.</td>
+      </tr>
+      <tr>
+        <td><b>2 — Trigger Map</b></td>
+        <td><span class="agent">Saga 📚 · 2-trigger-mapping</span></td>
+        <td class="purpose">Connected business goals to user psychology via trigger mapping: who is Aisha the resident, who is Carlos the staff user, what makes each act, what counts as mutual success.</td>
+      </tr>
+      <tr>
+        <td><b>3 — Scenarios</b></td>
+        <td><span class="agent">Saga 📚 · 3-scenarios</span><br/>(or Freya via <code>[SC]</code>)</td>
+        <td class="purpose">Two scenarios identified from PRD §4: <code>01-citizen-portal</code> and <code>02-authority-dashboard</code>. Each becomes a sub-folder of page specs.</td>
+      </tr>
+      <tr>
+        <td><b>4 — UX Design</b></td>
+        <td><span class="agent">Freya 🎨 · WDS Designer</span><br/><code>4-ux-design</code></td>
+        <td class="purpose">The big one. Wrote the design concept (<em>Friendly Civic Accountability</em>), seeded tokens, built 17 component families, defined 25 composition patterns, and produced all 15 page specifications.</td>
+      </tr>
+      <tr>
+        <td><b>4 — Handover</b></td>
+        <td><span class="agent">Freya 🎨 · design-delivery</span></td>
+        <td class="purpose">Compiled <code>H-handover/handover-summary.md</code>: FR→pages→components map, 14 API endpoints, NFR enforcement map, security checklist, accessibility requirements, 5-sprint build order.</td>
+      </tr>
+      <tr>
+        <td><b>5 — Prototype</b></td>
+        <td><span class="agent">Freya 🎨 · 5-agentic-development</span><br/><code>steps-p/1-prototype-setup.md</code></td>
+        <td class="purpose">Hand-coded <code>P-prototype/</code> from tokens + components. 23 screens, fully clickable, with a JS state store, drawer/modal/popover system, demo bar, and 32 realistic reports.</td>
+      </tr>
+      <tr>
+        <td><b>5 — Audit</b></td>
+        <td><span class="agent">Freya 🎨 · accessibility-audit</span><br/><code>4-ux-design/templates/...</code></td>
+        <td class="purpose">Responsive audit (<code>_progress/2026-09-06-responsive-audit.md</code>) — flagged 8 high-severity fixed-width conflicts and drove the lg/xl container system.</td>
+      </tr>
+      <tr>
+        <td><b>6 — Visual mockups</b></td>
+        <td><span class="agent">Freya 🎨</span></td>
+        <td class="purpose">5 ASCII wireframes in <code>W-visual-mockups/</code>: Submit, Confirmation, Tracking Resolved, Dashboard Queue, Report Detail drawer.</td>
+      </tr>
+      <tr>
+        <td><b>(planned) 6 — Assets</b></td>
+        <td><span class="agent">Freya 🎨 · 6-asset-generation</span></td>
+        <td class="purpose">Nano Banana / Stitch / Figma export for hi-fi fidelity. Not run on this project — prototype covers the validation need.</td>
+      </tr>
+      <tr>
+        <td><b>(planned) 7 — Design System</b></td>
+        <td><span class="agent">Freya 🎨 · 7-design-system</span></td>
+        <td class="purpose">Component library package — code-ready variants of the .md specs. Not run on this project; the prototype itself is the closest thing.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Skills we did not use (BMM agents)</h3>
+  <p>The <code>bmm</code> module ships its own team. WDS replaced the UX designer role and re-routed strategic work to Saga. BMM agents were available but not needed for a design-only project:</p>
+  <ul class="bullets">
+    <li><b>Mary 📊 · Business Analyst</b> — replaced by Saga.</li>
+    <li><b>John 📋 · Product Manager</b> — duties live in Saga's product brief.</li>
+    <li><b>Sally 🎨 · UX Designer</b> — replaced by Freya (WDS).</li>
+    <li><b>Winston 🏗️ · System Architect</b> — architecture concerns covered in handover summary; no architecture agent run.</li>
+    <li><b>Amelia 💻 · Senior Software Engineer</b> — not used; no implementation yet.</li>
+  </ul>
+</section>
+
+<!-- ============================================================ -->
+<section id="process">
+  <h2><span class="num">04</span>Process timeline</h2>
+  <p class="lead">Steps taken in one day, as captured in <code>_progress/00-design-log.md</code>.</p>
+
+  <div class="timeline">
+    <div class="entry">
+      <div class="date">Phase 4 — morning</div>
+      <div class="title">Setup + design system foundation</div>
+      <div class="body">PRD read, design log created, design concept (<em>Friendly Civic Accountability</em>) written, tokens seeded, 17 components + 25 patterns documented.</div>
+    </div>
+    <div class="entry">
+      <div class="date">Phase 4 — afternoon</div>
+      <div class="title">Page specs + handover</div>
+      <div class="body">All 15 page specs written across Citizen Portal (8) and Admin Portal (7). 5 ASCII mockups. Developer handover package compiled.</div>
+    </div>
+    <div class="entry">
+      <div class="date">Phase 5 — evening</div>
+      <div class="title">First prototype pass</div>
+      <div class="body">23 hand-coded HTML/CSS/JS screens built from tokens + components. Demo bar for cross-screen jumps.</div>
+    </div>
+    <div class="entry">
+      <div class="date">Phase 5 — evening</div>
+      <div class="title">Responsive + visual refresh</div>
+      <div class="body">lg/xl container system, sidebar-at-xl drawer, logo system, hero nav, Citizen side rail, Dashboard top bar.</div>
+    </div>
+    <div class="entry">
+      <div class="date">Phase 5 — night</div>
+      <div class="title">Polish + rebrand + isolation</div>
+      <div class="body">Content audit, favicons, Authority Dashboard → Admin Portal rename, Maple Heights → ReportIt rebrand, pin+check logo.</div>
+    </div>
+    <div class="entry">
+      <div class="date">Phase 5 — night</div>
+      <div class="title">Interactive upgrade</div>
+      <div class="body"><code>prototype-state.js</code> + <code>prototype-ui.js</code>: 32-report store, filter/sort/paginate, drawer, modals, bulk actions. State persists for the session.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section id="artifacts">
+  <h2><span class="num">05</span>Artifacts produced</h2>
+
+  <h3>Design system</h3>
+  <ul class="bullets">
+    <li><code>D-Design-System/01-concept.md</code> — the <em>why</em> and the feeling</li>
+    <li><code>D-Design-System/02-tokens.md</code> — raw values, AA palette, spacing scale, breakpoints</li>
+    <li><code>D-Design-System/03-components.md</code> — 17 reusable component families</li>
+    <li><code>D-Design-System/04-patterns.md</code> — 25 composition rules + per-page pattern matrix</li>
+  </ul>
+
+  <h3>Page specifications (15 pages, 2 scenarios)</h3>
+  <div class="grid">
+    <div class="card">
+      <span class="tag">Scenario 01</span>
+      <h4>Citizen Portal — 8 specs</h4>
+      <p>Submit · Confirmation · Tracking (5 status variants) · Personal History · Magic Link Request · 3 emails · Invalid Tracking ID.</p>
+    </div>
+    <div class="card">
+      <span class="tag">Scenario 02</span>
+      <h4>Admin Portal — 7 specs</h4>
+      <p>Sign In · Queue · Report Detail · Bulk Acknowledge · Filters · Empty State · Account/Sign Out.</p>
+    </div>
+  </div>
+
+  <h3>Handover &amp; mockups</h3>
+  <ul class="bullets">
+    <li><code>H-handover/handover-summary.md</code> — dev entry point: FR→pages→components, 14 API endpoints, NFR map, security checklist, 5-sprint build order.</li>
+    <li><code>W-visual-mockups/</code> — 5 ASCII wireframes.</li>
+  </ul>
+
+  <h3>The prototype</h3>
+  <pre><code>P-prototype/
+├── index.html                     ← Flow map / entry point
+├── README.md
+├── styles/  (tokens.css, base.css, components.css)
+├── scripts/ (app.js, interactions.js, prototype-state.js, prototype-ui.js)
+└── pages/
+    ├── citizen/  (13 files)
+    └── admin/    (8 files)</code></pre>
+
+  <h3>Progress &amp; audits</h3>
+  <ul class="bullets">
+    <li><code>_progress/00-design-log.md</code> — full session log.</li>
+    <li><code>_progress/2026-09-06-responsive-audit.md</code> — 8 high-severity items in responsive pass.</li>
+  </ul>
+</section>
+
+<!-- ============================================================ -->
+<section id="decisions">
+  <h2><span class="num">06</span>Decisions along the way</h2>
+  <p class="lead">Major decisions captured in the design log.</p>
+
+  <div class="grid">
+    <div class="card">
+      <h4>Design concept</h4>
+      <p><em>Friendly Civic Accountability</em> — warm, plain-spoken, status-as-hero.</p>
+    </div>
+    <div class="card">
+      <h4>Authority auth</h4>
+      <p>Invited admins with email/password for v1; SSO deferred to v2.</p>
+    </div>
+    <div class="card">
+      <h4>Dashboard tone</h4>
+      <p>Calm and efficient, dense, optimized for 5-second tasks.</p>
+    </div>
+    <div class="card">
+      <h4>Citizen narrow column</h4>
+      <p>Stays at 640px content width; type and gaps enrich at lg+.</p>
+    </div>
+    <div class="card">
+      <h4>Dashboard responsive</h4>
+      <p>Filters: drawer below lg, persistent 240px sidebar at xl+. Detail: bottom sheet below md.</p>
+    </div>
+    <div class="card">
+      <h4>Anti-enumeration</h4>
+      <p>Same timing/response for 400/404/500 on public lookups. Magic-link: same response regardless of email existence.</p>
+    </div>
+    <div class="card">
+      <h4>Renames</h4>
+      <p>Authority Dashboard → Admin Portal. Maple Heights → <code>[Your City]</code>; product reads as <b>ReportIt</b>.</p>
+    </div>
+    <div class="card">
+      <h4>Portal isolation</h4>
+      <p>Citizen and Admin do not link to each other. They meet only at the root <code>index.html</code>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<section id="next">
+  <h2><span class="num">07</span>What's next</h2>
+
+  <h3>To run the prototype</h3>
+  <pre><code>cd wds-output/P-prototype
+# then open index.html in any browser
+# (or: python -m http.server 8000  →  http://localhost:8000)</code></pre>
+
+  <h3>From prototype to product</h3>
+  <ul class="bullets">
+    <li><b>Phase 5 finalization</b> — package the prototype for stakeholder review.</li>
+    <li><b>Phase 6 asset generation</b> — Figma or Stitch export for pixel-perfect frames.</li>
+    <li><b>Phase 7 design system package</b> — code-ready component variants.</li>
+    <li><b>Build sprints</b> — 5-sprint order in the handover summary: foundations → Citizen happy path → Admin MVP → remaining surfaces → polish.</li>
+    <li><b>Resolve A-1..A-12</b> (hosting, photo size cap, magic-link rate limits, etc.) before Sprint 0.</li>
+  </ul>
+
+  <h3>Quick links</h3>
+  <ul class="bullets">
+    <li><a href="P-prototype/index.html">P-prototype/index.html</a> — clickable prototype.</li>
+    <li><a href="H-handover/handover-summary.md">H-handover/handover-summary.md</a> — developer entry point.</li>
+    <li><a href="_progress/00-design-log.md">_progress/00-design-log.md</a> — full session log.</li>
+    <li><a href="P-prototype/README.md">P-prototype/README.md</a> — how to use the prototype.</li>
+  </ul>
+</section>
+
+<footer>
+  <p><b>ReportIt</b> — Civic Issue Reporter &amp; Tracker · Phase 4 → 5 · 2026-09-06</p>
+  <p>Built by Freya (WDS Designer) and Saga (WDS Analyst) with Tauhid.</p>
+</footer>
+
+</div>
+</body>
+</html>

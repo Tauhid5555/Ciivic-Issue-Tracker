@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sign in — [Your City] ReportIt</title>
+  <link rel="stylesheet" href="../../styles/tokens.css" />
+  <link rel="stylesheet" href="../../styles/base.css" />
+  <link rel="stylesheet" href="../../styles/components.css" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 22.5 L4.5 13.5 A7.5 7.5 0 1 1 19.5 13.5 Z' fill='%232F6F4E'/><circle cx='12' cy='10.5' r='3.5' fill='white'/><path d='M9.7 10.6 L11.3 12.2 L14.4 9' stroke='%232F6F4E' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>" />
+  <script defer src="../../scripts/app.js"></script>
+  <script defer src="../../scripts/interactions.js"></script>
+</head>
+<body class="civ-page civ-page--dashboard" style="background:var(--color-bg);">
+  <a class="civ-skip" href="#main">Skip to main content</a>
+  <main id="main" class="civ-page__main">
+    <div class="civ-container civ-container--sm" style="max-width:400px;">
+      <div class="t-center" style="margin-bottom:var(--space-8);">
+        <span class="t-body-sm t-muted">City of [Your City] — ReportIt</span>
+        <h1 class="t-display" style="margin-top:var(--space-4);">Welcome back.</h1>
+        <p class="t-body t-muted" style="margin-top:var(--space-2);">Sign in to manage reported issues.</p>
+      </div>
+
+      <div class="civ-card civ-card--hero">
+        <form id="signInForm" class="civ-stack">
+          <div id="errorRegion" role="alert"></div>
+
+          <div class="civ-field">
+            <label class="civ-field__label" for="email">Email</label>
+            <input id="email" type="email" class="civ-input" placeholder="you@city.gov" autocomplete="email" required />
+          </div>
+
+          <div class="civ-field">
+            <label class="civ-field__label" for="password">Password</label>
+            <div class="civ-input--with-affix">
+              <input id="password" type="password" autocomplete="current-password" required />
+              <button type="button" class="civ-input-affix-btn" onclick="CIV.togglePassword('password')" aria-label="Show password">
+                <span aria-hidden="true">👁</span>
+              </button>
+            </div>
+          </div>
+
+          <button type="submit" class="civ-btn civ-btn--primary civ-btn--full" id="signInBtn">
+            <span id="signInLabel">Sign in</span>
+          </button>
+
+          <div class="t-center">
+            <a href="#" class="t-body-sm">Forgot your password?</a>
+          </div>
+        </form>
+      </div>
+
+      <p class="t-caption t-subtle t-center" style="margin-top:var(--space-6);">
+        Don't have an account? Ask your supervisor to invite you.
+      </p>
+    </div>
+  </main>
+  <script>
+    document.getElementById('signInForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const btn = document.getElementById('signInBtn');
+      const label = document.getElementById('signInLabel');
+      const err = document.getElementById('errorRegion');
+
+      btn.disabled = true;
+      label.innerHTML = '<span class="civ-spinner civ-spinner--sm"></span> Signing in…';
+
+      setTimeout(() => {
+        if (email === '' || document.getElementById('password').value === '') {
+          err.innerHTML = '<div class="civ-banner civ-banner--error" style="margin-bottom:var(--space-4);"><span class="civ-banner__icon">!</span><div>Please enter your email and password.</div></div>';
+          btn.disabled = false;
+          label.textContent = 'Sign in';
+        } else {
+          CIV.toast('Signed in.');
+          window.location.href = '02-queue.html';
+        }
+      }, 600);
+    });
+  </script>
+</body>
+</html>

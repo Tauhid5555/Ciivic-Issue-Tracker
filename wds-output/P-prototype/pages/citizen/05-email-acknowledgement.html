@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Email: We received your report — [Your City] ReportIt</title>
+  <link rel="stylesheet" href="../../styles/tokens.css" />
+  <link rel="stylesheet" href="../../styles/base.css" />
+  <link rel="stylesheet" href="../../styles/components.css" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 22.5 L4.5 13.5 A7.5 7.5 0 1 1 19.5 13.5 Z' fill='%232F6F4E'/><circle cx='12' cy='10.5' r='3.5' fill='white'/><path d='M9.7 10.6 L11.3 12.2 L14.4 9' stroke='%232F6F4E' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>" />
+  <script defer src="../../scripts/app.js"></script>
+  <script defer src="../../scripts/interactions.js"></script>
+</head>
+<body class="civ-page civ-page--citizen" style="background:var(--color-surface-muted);">
+  <a class="civ-skip" href="#main">Skip to main content</a>
+
+  <div style="background:var(--color-ink);color:var(--color-surface);padding:var(--space-2) var(--space-4);font-size:var(--text-caption);text-align:center;">
+    Inbox preview — From: City of [Your City] ReportIt &lt;civic-issues@city.gov&gt;
+    <br />
+    Subject: We received your report — tracking ID CIV-2026-9F4A
+    <br />
+    Preheader: Tracking ID CIV-2026-9F4A — we received your report.
+  </div>
+
+  <div class="civ-shell-citizen">
+
+    <!-- Left rail (md+) -->
+    <aside class="civ-rail" aria-label="Primary">
+      <a class="civ-logo civ-logo--citizen" href="../../index.html">
+        <span class="civ-logo__mark" aria-hidden="true"></span>
+        <span class="civ-logo__words">
+          <span class="civ-logo__primary">ReportIt</span>
+          <span class="civ-logo__sub">[Your City] · Public Works</span>
+        </span>
+      </a>
+
+      <nav class="civ-rail__nav" aria-label="Sections">
+        <a class="civ-nav__item" href="01-submit.html">📝 Report a problem</a>
+        <a class="civ-nav__item" href="04-personal-history.html">📋 My reports</a>
+        <a class="civ-nav__item" href="#" onclick="event.preventDefault(); CIV.toast('Help center')">❓ Help</a>
+        <a class="civ-nav__item" href="#" onclick="event.preventDefault(); CIV.toast('About this service')">ℹ About</a>
+      </nav>
+
+      <div class="civ-rail__footer">
+        <strong>Need help?</strong>
+        Call <a href="tel:+15555550199">(555) 555-0199</a><br>
+        Mon–Fri 8am–6pm
+      </div>
+    </aside>
+
+    <!-- Mobile header (base/sm only) -->
+    <div class="civ-shell-citizen__main">
+      <header class="civ-mobile-header">
+        <a class="civ-logo civ-logo--citizen" href="../../index.html">
+          <span class="civ-logo__mark" aria-hidden="true"></span>
+          <span class="civ-logo__words">
+            <span class="civ-logo__primary">ReportIt</span>
+            <span class="civ-logo__sub">[Your City] · Public Works</span>
+          </span>
+        </a>
+        <a class="civ-nav__item" href="01-submit.html" style="font-size:var(--text-body-sm);">+ Report</a>
+      </header>
+
+      <main id="main" class="civ-shell-citizen__content">
+    <div class="civ-email civ-container--citizen-narrow">
+    <div class="civ-email__doc">
+      <header class="civ-email__header">
+        <div class="civ-email__brand">City of [Your City] — ReportIt</div>
+      </header>
+
+      <div class="civ-email__body">
+        <span class="t-eyebrow t-brand">Update on your report</span>
+        <p class="t-body" style="margin-top:var(--space-3);">Hi,</p>
+        <p class="t-body" style="margin-top:var(--space-3);">
+          We've received your report about a Streetlight near [Your City]. Your tracking ID is below — save this email so you can check what happens.
+        </p>
+
+        <!-- Status block -->
+        <div class="civ-card" style="margin-block:var(--space-5);text-align:center;">
+          <span class="t-caption t-muted" style="text-transform:uppercase;letter-spacing:0.05em;font-weight:var(--weight-semibold);">Tracking ID</span>
+          <div class="civ-tracking-id" style="margin-block:var(--space-2);">CIV-2026-9F4A</div>
+          <div style="margin-bottom:var(--space-2);"><span class="civ-pill civ-pill--md civ-pill--submitted">Received</span></div>
+          <div class="t-body-sm t-muted">Streetlight · Sep 4, 2026 at 6:32 PM</div>
+        </div>
+
+        <div style="text-align:center;margin-block:var(--space-5);">
+          <a href="03-tracking-submitted.html?tracking_id=CIV-2026-9F4A&email=aisha%40example.com" class="civ-btn civ-btn--primary">View your report</a>
+        </div>
+
+        <p class="t-body">The team will look at this within 24 hours. You'll get another email when they do, and again when it's resolved.</p>
+
+        <p class="t-body" style="margin-top:var(--space-5);">— The [Your City] team</p>
+      </div>
+
+      <footer class="civ-email__footer">
+        You're getting this because you submitted a report on Sep 4, 2026. <a href="#">Why am I getting this?</a> · <a href="#">Privacy</a>
+        <br /><br />
+        City of [Your City] · 123 Main St · [Your City] · civic@city.gov
+      </footer>
+    </div>
+    </div>
+      </main>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,492 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ReportIt — Report and track problems in your neighborhood</title>
+  <link rel="stylesheet" href="styles/tokens.css" />
+  <link rel="stylesheet" href="styles/base.css" />
+  <link rel="stylesheet" href="styles/components.css" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 22.5 L4.5 13.5 A7.5 7.5 0 1 1 19.5 13.5 Z' fill='%232F6F4E'/><circle cx='12' cy='10.5' r='3.5' fill='white'/><path d='M9.7 10.6 L11.3 12.2 L14.4 9' stroke='%232F6F4E' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>" />
+  <script defer src="scripts/app.js"></script>
+  <style>
+    /* ---- Index-specific layout ---- */
+    .flow { max-width: 1280px; margin: 0 auto; padding: var(--space-6) var(--space-6) var(--space-12); }
+    @media (min-width: 1024px) { .flow { padding: var(--space-10) var(--space-8) var(--space-16); } }
+
+    .flow__group { margin-bottom: var(--space-12); }
+    .flow__title { font-size: var(--text-h2); font-weight: var(--weight-semibold); margin-bottom: var(--space-2); color: var(--color-ink); }
+    .flow__sub { color: var(--color-ink-muted); margin-bottom: var(--space-6); font-size: var(--text-body); }
+
+    .flow__grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: var(--space-4);
+    }
+    .flow__card {
+      display: block;
+      padding: var(--space-5);
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      text-decoration: none;
+      color: inherit;
+      transition: border-color var(--motion-fast), transform var(--motion-fast), box-shadow var(--motion-fast);
+    }
+    .flow__card:hover { border-color: var(--color-brand); text-decoration: none; transform: translateY(-2px); box-shadow: var(--shadow-md); }
+    .flow__card-tag { font-size: var(--text-caption); text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-ink-subtle); font-weight: var(--weight-semibold); }
+    .flow__card-name { margin-top: var(--space-3); font-weight: var(--weight-semibold); font-size: var(--text-body); color: var(--color-ink); }
+    .flow__card-note { margin-top: var(--space-2); font-size: var(--text-body-sm); color: var(--color-ink-muted); line-height: 1.5; }
+
+    .flowchain {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: var(--space-3);
+    }
+    .flowchain__step {
+      padding: var(--space-5);
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+      transition: border-color var(--motion-fast), transform var(--motion-fast), box-shadow var(--motion-fast);
+      position: relative;
+    }
+    .flowchain__step:hover { border-color: var(--color-brand); text-decoration: none; transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+    .flowchain__step .num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px; height: 24px;
+      border-radius: var(--radius-pill);
+      background: var(--color-brand-soft);
+      color: var(--color-brand);
+      font-size: var(--text-caption);
+      font-weight: var(--weight-semibold);
+    }
+    .flowchain__step .name { font-weight: var(--weight-semibold); font-size: var(--text-body-sm); color: var(--color-ink); }
+    .flowchain__step .role { font-size: var(--text-caption); color: var(--color-ink-muted); line-height: 1.4; }
+
+    .legend {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: var(--space-3);
+      padding: var(--space-5);
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+    }
+    .legend > div { font-size: var(--text-body-sm); color: var(--color-ink-muted); }
+    .legend strong { color: var(--color-ink); display: block; margin-bottom: 2px; }
+
+    /* ---- Hero ---- */
+    .hero {
+      background: linear-gradient(180deg, var(--color-brand-soft) 0%, var(--color-bg) 100%);
+      padding: var(--space-12) var(--space-6);
+      border-bottom: 1px solid var(--color-border);
+    }
+    @media (min-width: 1024px) {
+      .hero { padding: var(--space-16) var(--space-8); }
+    }
+    .hero__inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--space-8);
+      align-items: center;
+    }
+    @media (min-width: 1024px) {
+      .hero__inner { grid-template-columns: 1.4fr 1fr; gap: var(--space-12); }
+    }
+    .hero__eyebrow {
+      font-size: var(--text-caption);
+      font-weight: var(--weight-semibold);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--color-brand);
+      margin-bottom: var(--space-3);
+    }
+    .hero__title {
+      font-size: var(--text-display);
+      font-weight: var(--weight-bold);
+      color: var(--color-ink);
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+    }
+    @media (min-width: 1024px) {
+      .hero__title { font-size: 3rem; line-height: 1.1; }
+    }
+    .hero__lede {
+      margin-top: var(--space-4);
+      font-size: var(--text-body);
+      color: var(--color-ink-muted);
+      max-width: 56ch;
+      line-height: 1.6;
+    }
+    .hero__cta {
+      margin-top: var(--space-6);
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-3);
+    }
+
+    .hero__card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-6);
+      box-shadow: var(--shadow-md);
+    }
+    .hero__card h3 {
+      font-size: var(--text-h3);
+      font-weight: var(--weight-semibold);
+      margin-bottom: var(--space-4);
+      color: var(--color-ink);
+    }
+    .hero__card ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+    .hero__card li {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-3);
+      font-size: var(--text-body-sm);
+      color: var(--color-ink-muted);
+      line-height: 1.5;
+    }
+    .hero__card li strong { color: var(--color-ink); display: block; }
+    .hero__icon {
+      flex-shrink: 0;
+      width: 28px; height: 28px;
+      border-radius: var(--radius-sm);
+      background: var(--color-brand-soft);
+      color: var(--color-brand);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ---- Site nav ---- */
+    .site-nav {
+      background: var(--color-surface);
+      border-bottom: 1px solid var(--color-border);
+      padding: var(--space-3) var(--space-6);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .site-nav__inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: var(--space-6);
+      flex-wrap: wrap;
+    }
+    .site-nav__brand { flex-shrink: 0; }
+    .site-nav__links { flex: 1; }
+    .site-nav__meta {
+      font-size: var(--text-caption);
+      color: var(--color-ink-subtle);
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+    @media (max-width: 767px) {
+      .site-nav__meta { display: none; }
+    }
+
+    .civ-site-footer {
+      margin-top: var(--space-16);
+      padding: var(--space-10) var(--space-6);
+      background: var(--color-surface-muted);
+      border-top: 1px solid var(--color-border);
+    }
+    .civ-site-footer__inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--space-5);
+      align-items: start;
+    }
+    @media (min-width: 768px) {
+      .civ-site-footer__inner {
+        grid-template-columns: 2fr 2fr 1fr;
+        align-items: center;
+      }
+    }
+    .civ-site-footer__brand { display: flex; flex-direction: column; gap: 2px; }
+    .civ-site-footer__links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-5);
+      font-size: var(--text-body-sm);
+    }
+    .civ-site-footer__links a {
+      color: var(--color-ink-muted);
+      text-decoration: none;
+    }
+    .civ-site-footer__links a:hover { color: var(--color-brand); text-decoration: underline; }
+    .civ-site-footer__legal {
+      font-size: var(--text-caption);
+      color: var(--color-ink-subtle);
+      text-align: left;
+    }
+    @media (min-width: 768px) {
+      .civ-site-footer__legal { text-align: right; }
+    }
+  </style>
+</head>
+<body class="civ-page">
+  <a class="civ-skip" href="#main">Skip to main content</a>
+
+  <!-- Site nav -->
+  <nav class="site-nav" aria-label="Primary">
+    <div class="site-nav__inner">
+      <a class="civ-logo civ-logo--citizen site-nav__brand" href="index.html">
+        <span class="civ-logo__mark" aria-hidden="true"></span>
+        <span class="civ-logo__words">
+          <span class="civ-logo__primary">ReportIt</span>
+          <span class="civ-logo__sub">[Your City] · Public Works</span>
+        </span>
+      </a>
+
+      <div class="site-nav__links">
+        <nav class="civ-nav civ-hero-nav" aria-label="Sections">
+          <a class="civ-nav__item civ-nav__item--active" href="index.html">Overview</a>
+          <a class="civ-nav__item" href="pages/citizen/index.html">Citizen Portal</a>
+          <a class="civ-nav__item" href="pages/admin/index.html">Admin Portal</a>
+        </nav>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <header class="hero">
+    <div class="hero__inner">
+      <div>
+        <div class="hero__eyebrow">Report. Track. Resolve.</div>
+        <h1 class="hero__title">Report problems in your neighborhood.<br/>Watch them get fixed.</h1>
+        <p class="hero__lede">
+          Tell us about a streetlight, pothole, drainage, garbage, or noise issue and we'll route it to the right team. You'll get a tracking ID and updates by email.
+        </p>
+        <div class="hero__cta">
+          <a class="civ-btn civ-btn--primary" href="pages/citizen/01-submit.html">
+            Start as a citizen →
+          </a>
+          <a class="civ-btn civ-btn--secondary" href="pages/admin/index.html">
+            Open the admin portal
+          </a>
+        </div>
+      </div>
+
+      <aside class="hero__card">
+        <h3>What's inside</h3>
+        <ul>
+          <li>
+            <span class="hero__icon" aria-hidden="true">👤</span>
+            <div>
+              <strong>Citizen Portal</strong>
+              Report a problem in under a minute. Anonymous by default. Track every update by ID.
+            </div>
+          </li>
+          <li>
+            <span class="hero__icon" aria-hidden="true">🛠</span>
+            <div>
+              <strong>Admin Portal</strong>
+              City staff see every report, triage in two clicks, and keep citizens informed.
+            </div>
+          </li>
+          <li>
+            <span class="hero__icon" aria-hidden="true">✉</span>
+            <div>
+              <strong>Automatic email updates</strong>
+              Confirmation when you submit. A note every time the status changes.
+            </div>
+          </li>
+          <li>
+            <span class="hero__icon" aria-hidden="true">🏛</span>
+            <div>
+              <strong>Built for [Your City]</strong>
+              Accessible on any device. Available in every neighborhood. Free to use.
+            </div>
+          </li>
+        </ul>
+      </aside>
+    </div>
+  </header>
+
+  <main id="main" class="civ-page__main flow">
+
+    <!-- Citizen Portal end-to-end flow -->
+    <section class="flow__group">
+      <h2 class="flow__title">Citizen Portal — Aisha reports a problem, gets updates, flags a fix.</h2>
+      <p class="flow__sub">Mobile-first. Anonymous by default. Email opt-in. Single tracking ID per report.</p>
+      <div class="flowchain">
+        <a class="flowchain__step" href="pages/citizen/01-submit.html">
+          <span class="num">1</span>
+          <span class="name">Report a problem</span>
+          <span class="role">Aisha, mobile browser</span>
+        </a>
+        <a class="flowchain__step" href="pages/citizen/02-confirmation.html">
+          <span class="num">2</span>
+          <span class="name">Confirmation</span>
+          <span class="role">Tracking ID issued</span>
+        </a>
+        <a class="flowchain__step" href="pages/citizen/05-email-acknowledgement.html">
+          <span class="num">3</span>
+          <span class="name">Email: Acknowledgement</span>
+          <span class="role">If email provided</span>
+        </a>
+        <a class="flowchain__step" href="pages/citizen/03-tracking-submitted.html">
+          <span class="num">4</span>
+          <span class="name">Tracking: Submitted</span>
+          <span class="role">First visit</span>
+        </a>
+        <a class="flowchain__step" href="pages/citizen/06-email-status-change.html">
+          <span class="num">5</span>
+          <span class="name">Email: Status Change</span>
+          <span class="role">"In Progress"</span>
+        </a>
+        <a class="flowchain__step" href="pages/citizen/03-tracking-in-progress.html">
+          <span class="num">6</span>
+          <span class="name">Tracking: In Progress</span>
+          <span class="role">Work started</span>
+        </a>
+        <a class="flowchain__step" href="pages/citizen/03-tracking-resolved.html">
+          <span class="num">7</span>
+          <span class="name">Tracking: Resolved</span>
+          <span class="role">Team marks resolved</span>
+        </a>
+        <a class="flowchain__step" href="pages/citizen/03-tracking-disputed.html">
+          <span class="num">8</span>
+          <span class="name">Tracking: Disputed</span>
+          <span class="role">Aisha says "not fixed"</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- Citizen Portal: secondary flows -->
+    <section class="flow__group">
+      <h2 class="flow__title">Citizen Portal — Personal history & edge cases</h2>
+      <div class="flow__grid">
+        <a class="flow__card" href="pages/citizen/04-personal-history.html">
+          <div class="flow__card-tag">Account</div>
+          <div class="flow__card-name">Personal History</div>
+          <div class="flow__card-note">List of all reports Aisha has made (magic-link gated).</div>
+        </a>
+        <a class="flow__card" href="pages/citizen/04b-magic-link-request.html">
+          <div class="flow__card-tag">Sign in</div>
+          <div class="flow__card-name">Sign-in link request</div>
+          <div class="flow__card-note">How a citizen enters Personal History.</div>
+        </a>
+        <a class="flow__card" href="pages/citizen/07-email-magic-link.html">
+          <div class="flow__card-tag">Email</div>
+          <div class="flow__card-name">Sign-in email</div>
+          <div class="flow__card-note">The link sent to the citizen's inbox.</div>
+        </a>
+        <a class="flow__card" href="pages/citizen/08-invalid-tracking.html">
+          <div class="flow__card-tag">Help</div>
+          <div class="flow__card-name">Tracking not found</div>
+          <div class="flow__card-note">Anti-enumeration graceful failure.</div>
+        </a>
+        <a class="flow__card" href="pages/citizen/03-tracking-acknowledged.html">
+          <div class="flow__card-tag">Status</div>
+          <div class="flow__card-name">Tracking: Acknowledged</div>
+          <div class="flow__card-note">Status after triage, before work starts.</div>
+        </a>
+      </div>
+    </section>
+
+    <!-- Authority Dashboard flow -->
+    <section class="flow__group">
+      <h2 class="flow__title">Admin Portal — Carlos triages and acts.</h2>
+      <p class="flow__sub">Desktop-first. 5-second-per-task velocity. Two-click acknowledge. Status-conditional quick actions.</p>
+      <div class="flowchain">
+        <a class="flowchain__step" href="pages/admin/01-sign-in.html">
+          <span class="num">1</span>
+          <span class="name">Sign In</span>
+          <span class="role">Email/password</span>
+        </a>
+        <a class="flowchain__step" href="pages/admin/02-queue.html">
+          <span class="num">2</span>
+          <span class="name">Queue</span>
+          <span class="role">All reports, sortable</span>
+        </a>
+        <a class="flowchain__step" href="pages/admin/02-queue-bulk.html">
+          <span class="num">3</span>
+          <span class="name">Bulk acknowledge</span>
+          <span class="role">3 rows selected</span>
+        </a>
+        <a class="flowchain__step" href="pages/admin/03-report-detail.html">
+          <span class="num">4</span>
+          <span class="name">Report Detail</span>
+          <span class="role">Drawer with priority + notes</span>
+        </a>
+        <a class="flowchain__step" href="pages/admin/02-queue-filters.html">
+          <span class="num">5</span>
+          <span class="name">Filters Drawer</span>
+          <span class="role">Advanced filters</span>
+        </a>
+        <a class="flowchain__step" href="pages/admin/02-queue-account.html">
+          <span class="num">6</span>
+          <span class="name">Account</span>
+          <span class="role">Menu popover + sign out</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- Dashboard secondary -->
+    <section class="flow__group">
+      <h2 class="flow__title">Admin Portal — Edge cases</h2>
+      <div class="flow__grid">
+        <a class="flow__card" href="pages/admin/02-queue-empty.html">
+          <div class="flow__card-tag">Empty state</div>
+          <div class="flow__card-name">Queue — Filter returns 0</div>
+          <div class="flow__card-note">No reports match your current filters.</div>
+        </a>
+        <a class="flow__card" href="pages/admin/06-empty-state.html">
+          <div class="flow__card-tag">Empty state</div>
+          <div class="flow__card-name">Empty queue</div>
+          <div class="flow__card-note">Empty queue with filters active, or with no reports yet.</div>
+        </a>
+        <a class="flow__card" href="pages/admin/03-report-detail.html">
+          <div class="flow__card-tag">Modal</div>
+          <div class="flow__card-name">Resolution Form</div>
+          <div class="flow__card-note">Open the Mark Resolved modal from the detail page.</div>
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="civ-site-footer">
+    <div class="civ-site-footer__inner">
+      <div class="civ-site-footer__brand">
+        <span class="civ-logo__primary">ReportIt</span>
+        <span class="civ-logo__sub">[Your City] · Public Works Department</span>
+      </div>
+      <nav class="civ-site-footer__links" aria-label="Footer">
+        <a href="#" onclick="event.preventDefault(); CIV.toast('Privacy policy')">Privacy</a>
+        <a href="#" onclick="event.preventDefault(); CIV.toast('Accessibility statement')">Accessibility</a>
+        <a href="mailto:civic@city.gov">Contact</a>
+        <a href="tel:+15555550199">(555) 555-0199</a>
+      </nav>
+      <div class="civ-site-footer__legal">
+        © 2026 ReportIt · [Your City]. A public service.
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,11 @@
+# Local Civic Issue Reporter & Tracker
+
+A platform where people can report local problems like broken streetlights, potholes, garbage, drainage issues, and noise complaints.
+
+Right now, people may report these problems by calling a helpline or posting in community groups. But they often cannot easily track their complaints or know if the problem has been fixed.
+
+The platform will let people report an issue by adding details, a photo, and the location. They will also be able to see the status of their report and get updates.
+
+Authorities will be able to see the reported issues, manage them, update their status, and mark them as resolved.
+
+The main goal is to make reporting local problems easier and give people a simple way to track their complaints.

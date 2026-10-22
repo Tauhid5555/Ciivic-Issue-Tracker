@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Report a problem — ReportIt</title>
+  <link rel="stylesheet" href="../../styles/tokens.css" />
+  <link rel="stylesheet" href="../../styles/base.css" />
+  <link rel="stylesheet" href="../../styles/components.css" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 22.5 L4.5 13.5 A7.5 7.5 0 1 1 19.5 13.5 Z' fill='%232F6F4E'/><circle cx='12' cy='10.5' r='3.5' fill='white'/><path d='M9.7 10.6 L11.3 12.2 L14.4 9' stroke='%232F6F4E' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>" />
+  <script defer src="../../scripts/app.js"></script>
+  <script defer src="../../scripts/interactions.js"></script>
+</head>
+<body class="civ-page civ-page--citizen">
+  <a class="civ-skip" href="#main">Skip to main content</a>
+
+  <div class="civ-shell-citizen">
+
+    <!-- Left rail (md+) -->
+    <aside class="civ-rail" aria-label="Primary">
+      <a class="civ-logo civ-logo--citizen" href="../../index.html">
+        <span class="civ-logo__mark" aria-hidden="true"></span>
+        <span class="civ-logo__words">
+          <span class="civ-logo__primary">ReportIt</span>
+          <span class="civ-logo__sub">[Your City] · Public Works</span>
+        </span>
+      </a>
+
+      <nav class="civ-rail__nav" aria-label="Sections">
+        <a class="civ-nav__item civ-nav__item--active" href="01-submit.html">📝 Report a problem</a>
+        <a class="civ-nav__item" href="04-personal-history.html">📋 My reports</a>
+        <a class="civ-nav__item" href="#" onclick="event.preventDefault(); CIV.toast('Help center')">❓ Help</a>
+        <a class="civ-nav__item" href="#" onclick="event.preventDefault(); CIV.toast('About this service')">ℹ About</a>
+      </nav>
+
+      <div class="civ-rail__footer">
+        <strong>Need help?</strong>
+        Call <a href="tel:+15555550199">(555) 555-0199</a><br>
+        Mon–Fri 8am–6pm
+      </div>
+    </aside>
+
+    <!-- Mobile header (base/sm only) -->
+    <div class="civ-shell-citizen__main">
+      <header class="civ-mobile-header">
+        <a class="civ-logo civ-logo--citizen" href="../../index.html">
+          <span class="civ-logo__mark" aria-hidden="true"></span>
+          <span class="civ-logo__words">
+            <span class="civ-logo__primary">ReportIt</span>
+            <span class="civ-logo__sub">[Your City] · Public Works</span>
+          </span>
+        </a>
+        <a class="civ-nav__item" href="01-submit.html" style="font-size:var(--text-body-sm);">+ Report</a>
+      </header>
+
+      <main id="main" class="civ-shell-citizen__content">
+    <div class="civ-container civ-container--form">
+
+      <div class="civ-steps" aria-hidden="true">
+        <span class="civ-steps__dot civ-steps__dot--active"></span>
+        <span class="civ-steps__dot"></span>
+        <span class="civ-steps__dot"></span>
+        <span>Step 1 of 3 · Tell us what's wrong</span>
+      </div>
+
+      <h1 class="t-h1">Report a problem</h1>
+      <p class="t-body t-muted" style="margin-top:var(--space-2);margin-bottom:var(--space-8);">It takes about a minute.</p>
+
+      <form id="reportForm" class="civ-stack-lg" novalidate>
+
+        <!-- Section: Category -->
+        <fieldset class="civ-field" style="border:0;padding:0;">
+          <legend class="civ-field__label">
+            What's the problem? <span class="civ-field__required">*</span>
+          </legend>
+          <p class="civ-field__helper" style="margin-top:0;margin-bottom:var(--space-3);">Pick the closest match.</p>
+          <div class="civ-grid civ-grid--cats" role="radiogroup" aria-label="Category">
+            <label class="civ-cat-card">
+              <input type="radio" name="category" value="streetlight" class="civ-visually-hidden" style="position:absolute;opacity:0;pointer-events:none;" />
+              <span class="civ-cat-card__icon" aria-hidden="true">💡</span>
+              <span class="civ-cat-card__label">Streetlight</span>
+            </label>
+            <label class="civ-cat-card">
+              <input type="radio" name="category" value="pothole" class="civ-visually-hidden" style="position:absolute;opacity:0;pointer-events:none;" />
+              <span class="civ-cat-card__icon" aria-hidden="true">🕳️</span>
+              <span class="civ-cat-card__label">Pothole</span>
+            </label>
+            <label class="civ-cat-card">
+              <input type="radio" name="category" value="garbage" class="civ-visually-hidden" style="position:absolute;opacity:0;pointer-events:none;" />
+              <span class="civ-cat-card__icon" aria-hidden="true">🗑️</span>
+              <span class="civ-cat-card__label">Garbage</span>
+            </label>
+            <label class="civ-cat-card">
+              <input type="radio" name="category" value="drainage" class="civ-visually-hidden" style="position:absolute;opacity:0;pointer-events:none;" />
+              <span class="civ-cat-card__icon" aria-hidden="true">🌧️</span>
+              <span class="civ-cat-card__label">Drainage</span>
+            </label>
+            <label class="civ-cat-card">
+              <input type="radio" name="category" value="noise" class="civ-visually-hidden" style="position:absolute;opacity:0;pointer-events:none;" />
+              <span class="civ-cat-card__icon" aria-hidden="true">🔊</span>
+              <span class="civ-cat-card__label">Noise</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <!-- Section: Location -->
+        <div class="civ-field">
+          <label class="civ-field__label" for="location">Where is it? <span class="civ-field__required">*</span></label>
+          <p class="civ-field__helper" style="margin-top:0;margin-bottom:var(--space-3);">We'll show the neighborhood, not your exact address.</p>
+          <div class="civ-stack">
+            <button type="button" class="civ-btn civ-btn--secondary" onclick="CIV.toast('Location preview would appear here.')">
+              <span aria-hidden="true">📍</span> Use my location
+            </button>
+            <div class="civ-map">
+              <div class="civ-pin civ-pin--placed" aria-label="Selected location"></div>
+            </div>
+            <p class="t-caption t-muted">[Your City] · approximate area</p>
+          </div>
+        </div>
+
+        <!-- Section: Photo -->
+        <div class="civ-field">
+          <label class="civ-field__label" for="photo">Add a photo <span class="civ-field__required">*</span></label>
+          <p class="civ-field__helper" style="margin-top:0;margin-bottom:var(--space-3);">Helps the city team understand the problem. JPEG, PNG, or HEIC up to 10MB.</p>
+          <label class="civ-dropzone" for="photo">
+            <span class="civ-dropzone__icon" aria-hidden="true">📷</span>
+            <span class="t-body-sm t-muted">Tap to take a photo or choose from your library</span>
+          </label>
+          <input id="photo" type="file" accept="image/*" capture="environment" class="civ-visually-hidden" style="position:absolute;opacity:0;pointer-events:none;width:0;height:0;" />
+        </div>
+
+        <!-- Section: Description -->
+        <div class="civ-field">
+          <label class="civ-field__label" for="description">Anything else to add?</label>
+          <p class="civ-field__helper" style="margin-top:0;margin-bottom:var(--space-3);">A sentence is fine. Tell us anything that helps the team respond.</p>
+          <textarea id="description" class="civ-textarea" maxlength="500" placeholder="What did you see?"></textarea>
+          <div class="civ-char-counter" data-target="description" data-max="500">0 / 500</div>
+        </div>
+
+        <!-- Section: Email -->
+        <div class="civ-field">
+          <label class="civ-field__label" for="email">Get notified the moment we look at this?</label>
+          <p class="civ-field__helper" style="margin-top:0;margin-bottom:var(--space-3);">We'll email you when your report is reviewed and again when it's resolved. Leave blank to stay anonymous.</p>
+          <input id="email" type="email" class="civ-input" placeholder="you@example.com" autocomplete="email" />
+        </div>
+
+        <!-- Sticky submit bar -->
+        <div class="civ-stickysubmit">
+          <p class="t-caption t-subtle t-center" style="margin-bottom:var(--space-3);">
+            By submitting, you agree to our <a href="mailto:privacy@city.gov">privacy policy</a>.
+          </p>
+          <button type="submit" class="civ-btn civ-btn--primary civ-btn--full">
+            Submit Report
+          </button>
+        </div>
+      </form>
+
+    </div>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    // Category card selection
+    document.querySelectorAll('.civ-cat-card').forEach(card => {
+      const input = card.querySelector('input[type="radio"]');
+      card.addEventListener('click', (e) => {
+        if (e.target.tagName === 'INPUT') return;
+        input.checked = true;
+        document.querySelectorAll('.civ-cat-card').forEach(c => c.classList.remove('civ-cat-card--selected'));
+        card.classList.add('civ-cat-card--selected');
+      });
+      input.addEventListener('change', () => {
+        document.querySelectorAll('.civ-cat-card').forEach(c => c.classList.remove('civ-cat-card--selected'));
+        if (input.checked) card.classList.add('civ-cat-card--selected');
+      });
+    });
+
+    // Char counter
+    const desc = document.getElementById('description');
+    const counter = document.querySelector('[data-target="description"]');
+    desc.addEventListener('input', () => {
+      const n = desc.value.length;
+      counter.textContent = `${n} / 500`;
+      counter.classList.toggle('civ-char-counter--warn', n >= 450 && n < 500);
+      counter.classList.toggle('civ-char-counter--err', n >= 500);
+    });
+
+    // Submit -> Confirmation
+    document.getElementById('reportForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value.trim();
+      const params = new URLSearchParams({ tracking_id: CIV.demo.trackingId });
+      if (email) params.set('email', email);
+      window.location.href = `02-confirmation.html?${params.toString()}`;
+    });
+  </script>
+
+  <style>
+    .civ-visually-hidden { position:absolute; opacity:0; pointer-events:none; width:0; height:0; }
+    /* hide radio visually but keep accessible */
+    .civ-cat-card input { position:absolute; opacity:0; pointer-events:none; }
+    .civ-cat-card--selected input { /* selected state shown on label */ }
+  </style>
+</body>
+</html>

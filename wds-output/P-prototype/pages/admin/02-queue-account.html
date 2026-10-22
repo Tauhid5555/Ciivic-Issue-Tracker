@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Queue — [Your City] ReportIt</title>
+  <link rel="stylesheet" href="../../styles/tokens.css" />
+  <link rel="stylesheet" href="../../styles/base.css" />
+  <link rel="stylesheet" href="../../styles/components.css" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 22.5 L4.5 13.5 A7.5 7.5 0 1 1 19.5 13.5 Z' fill='%232F6F4E'/><circle cx='12' cy='10.5' r='3.5' fill='white'/><path d='M9.7 10.6 L11.3 12.2 L14.4 9' stroke='%232F6F4E' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>" />
+  <script defer src="../../scripts/app.js"></script>
+  <script defer src="../../scripts/interactions.js"></script>
+  <script defer src="../../scripts/prototype-state.js"></script>
+  <script defer src="../../scripts/prototype-ui.js"></script>
+</head>
+<body class="civ-page civ-page--dashboard">
+  <a class="civ-skip" href="#main">Skip to main content</a>
+
+  <!-- Top bar -->
+  <header class="civ-topbar">
+    <div class="civ-container civ-container--dashboard civ-topbar__inner">
+      <a class="civ-logo civ-logo--dashboard civ-topbar__brand" href="../admin/index.html">
+        <span class="civ-logo__mark" aria-hidden="true"></span>
+        <span class="civ-logo__words">
+          <span class="civ-logo__primary">ReportIt</span>
+          <span class="civ-logo__sub">[Your City] · Admin Portal</span>
+        </span>
+      </a>
+
+      <nav class="civ-nav" aria-label="Primary" style="flex:1; justify-content:center;">
+        <a class="civ-nav__item civ-nav__item--active" href="02-queue.html">Queue</a>
+        <a class="civ-nav__item" href="#" onclick="event.preventDefault(); CIV.toast('My Work — coming soon')">My Work</a>
+        <a class="civ-nav__item" href="#" onclick="event.preventDefault(); CIV.toast('Reports — coming soon')">Reports</a>
+      </nav>
+
+      <div style="position:relative;">
+        <button class="civ-avatar" id="avatarBtn" aria-haspopup="menu" aria-expanded="false" aria-label="Account menu, signed in as Carlos Mendez">CM</button>
+        <div class="civ-popover" id="accountPopover" role="menu">
+          <div class="civ-popover__header">
+            <div class="civ-popover__name">Carlos Mendez</div>
+            <div class="civ-popover__email">carlos.mendez@city.gov</div>
+          </div>
+          <button class="civ-popover__item civ-popover__item--disabled" disabled>Account settings</button>
+          <button class="civ-popover__item civ-popover__item--disabled" disabled>Keyboard shortcuts</button>
+          <div class="civ-popover__divider"></div>
+          <button class="civ-popover__item civ-popover__item--danger" onclick="window.location.href='01-sign-in.html'">Sign out</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="civ-page__main">
+    <div class="civ-container civ-container--xl">
+
+      <!-- Page title strip -->
+      <div class="civ-pagetitle">
+        <h1 class="t-h1">Queue</h1>
+        <div style="display:flex;align-items:center;gap:var(--space-3);">
+          <button class="civ-btn civ-btn--secondary civ-btn--sm" onclick="CIV.openDrawer('filtersDrawer')">
+            <span aria-hidden="true">⚙</span> Filters
+          </button>
+          <span class="civ-pagetitle__count" id="resultCount">32 of 32 reports</span>
+        </div>
+      </div>
+
+      <!-- Active filter chips row -->
+      <div class="civ-activefilters" id="activeFilters" style="display:none;"></div>
+
+      <!-- Quick stats strip -->
+      <div class="civ-quickstats" id="quickStatsRow"></div>
+
+      <!-- Quick chips row -->
+      <div class="civ-cluster civ-quickchips" id="quickChipsRow" style="margin-bottom:var(--space-4);"></div>
+
+      <!-- Queue table -->
+      <div class="civ-table-wrap">
+        <table class="civ-table" id="queueTable">
+          <thead>
+            <tr>
+              <th style="width:40px;"><input type="checkbox" aria-label="Select all on page" onchange="CIV.toggleAll(this)" /></th>
+              <th data-sort-key="status">Status <span class="civ-sort-indicator"></span></th>
+              <th data-sort-key="priority">Priority <span class="civ-sort-indicator"></span></th>
+              <th data-sort-key="category">Category <span class="civ-sort-indicator"></span></th>
+              <th data-sort-key="zone">Location <span class="civ-sort-indicator"></span></th>
+              <th data-sort-key="submitted">Submitted <span class="civ-sort-indicator"></span></th>
+              <th>Photo</th>
+              <th>Tracking ID</th>
+              <th>Reporter</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="queueBody"><!-- rendered by JS --></tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <div class="civ-pagination">
+        <div>Showing <strong id="showingCount">1–10</strong> of <strong id="totalCount">32</strong></div>
+        <div class="civ-pagination__pages" id="paginationPages"></div>
+        <div>
+          Per page:
+          <select id="perPageSelect" class="civ-pagination__btn" style="margin-left:var(--space-2);">
+            <option>10</option>
+            <option>25</option>
+            <option>50</option>
+          </select>
+        </div>
+      </div>
+
+    </div>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+          const btn = document.getElementById('avatarBtn');
+          if (btn) {
+            btn.setAttribute('aria-expanded', 'true');
+            document.getElementById('accountPopover').classList.add('civ-popover--open');
+          }
+        }, 100);
+      });
+    </script>
+  </main>
+
+  <!-- Bulk action bar (sticky bottom) -->
+  <div class="civ-bulkbar" id="bulkBar" aria-label="Bulk actions">
+    <div>
+      <div class="civ-bulkbar__count">0 selected</div>
+      <div class="civ-bulkbar__breakdown"></div>
+    </div>
+    <div class="civ-bulkbar__actions">
+      <button class="civ-btn civ-btn--primary civ-btn--sm" data-acknowledge onclick="CIV.actions.bulkAcknowledge()">Acknowledge 0</button>
+      <button class="civ-btn civ-btn--secondary civ-btn--sm" data-start-work onclick="CIV.actions.bulkStartWork()" style="margin-left:var(--space-2);">Start work 0</button>
+      <div class="civ-dropdown" id="priorityDropdown">
+        <button class="civ-btn civ-btn--secondary civ-btn--sm" onclick="CIV.toggleDropdown('priorityDropdown', this)" style="margin-left:var(--space-2);">Set priority</button>
+        <div class="civ-dropdown__menu">
+          <button class="civ-dropdown__item" onclick="CIV.actions.bulkSetPriority('low')">Low</button>
+          <button class="civ-dropdown__item" onclick="CIV.actions.bulkSetPriority('medium')">Medium</button>
+          <button class="civ-dropdown__item" onclick="CIV.actions.bulkSetPriority('high')">High</button>
+          <button class="civ-dropdown__item" onclick="CIV.actions.bulkSetPriority('urgent')">Urgent</button>
+        </div>
+      </div>
+      <button class="civ-btn civ-btn--ghost civ-btn--sm" onclick="CIV.actions.clearSelection()" style="margin-left:var(--space-2);">Clear selection</button>
+    </div>
+  </div>
+
+  <!-- Filters Drawer -->
+  <div class="civ-drawer-backdrop" id="filtersBackdrop"></div>
+  <aside class="civ-drawer civ-drawer--left" id="filtersDrawer" role="dialog" aria-modal="true" aria-label="Filters">
+    <div class="civ-drawer__header">
+      <h2 class="t-h3">Filters</h2>
+      <div style="display:flex;align-items:center;gap:var(--space-3);">
+        <button class="t-body-sm t-brand" id="resetFiltersBtn">Reset</button>
+        <button class="civ-close-btn" onclick="CIV.closeDrawer('filtersDrawer')" aria-label="Close filters">×</button>
+      </div>
+    </div>
+    <div class="civ-drawer__body">
+      <div class="civ-stack-lg">
+        <div>
+          <label class="civ-field__label" for="searchBox">Search</label>
+          <input id="searchBox" class="civ-input" placeholder="Tracking ID, description, location…" style="margin-top:var(--space-2);" />
+        </div>
+        <div>
+          <label class="civ-field__label">Category</label>
+          <div class="civ-cluster" style="margin-top:var(--space-2);">
+            <button class="civ-chip" data-filter-category="all">All</button>
+            <button class="civ-chip" data-filter-category="streetlight">Streetlight</button>
+            <button class="civ-chip" data-filter-category="pothole">Pothole</button>
+            <button class="civ-chip" data-filter-category="garbage">Garbage</button>
+            <button class="civ-chip" data-filter-category="drainage">Drainage</button>
+            <button class="civ-chip" data-filter-category="noise">Noise</button>
+            <button class="civ-chip" data-filter-category="graffiti">Graffiti</button>
+            <button class="civ-chip" data-filter-category="signage">Signage</button>
+            <button class="civ-chip" data-filter-category="sidewalk">Sidewalk</button>
+          </div>
+        </div>
+        <div>
+          <label class="civ-field__label">Status</label>
+          <div class="civ-cluster" style="margin-top:var(--space-2);">
+            <button class="civ-chip" data-filter-status="all">All</button>
+            <button class="civ-chip" data-filter-status="submitted">Submitted</button>
+            <button class="civ-chip" data-filter-status="acknowledged">Acknowledged</button>
+            <button class="civ-chip" data-filter-status="in-progress">In Progress</button>
+            <button class="civ-chip" data-filter-status="resolved">Resolved</button>
+            <button class="civ-chip" data-filter-status="disputed">Disputed</button>
+            <button class="civ-chip" data-filter-status="duplicate">Duplicate</button>
+          </div>
+        </div>
+        <div>
+          <label class="civ-field__label">Date range</label>
+          <div class="civ-radio-group" style="margin-top:var(--space-2);" id="dateRangeGroup">
+            <label class="civ-radio"><input type="radio" name="date" value="all" /> All</label>
+            <label class="civ-radio"><input type="radio" name="date" value="today" /> Today</label>
+            <label class="civ-radio"><input type="radio" name="date" value="week" /> This week</label>
+            <label class="civ-radio"><input type="radio" name="date" value="month" /> This month</label>
+            <label class="civ-radio"><input type="radio" name="date" value="overdue" /> Overdue only</label>
+          </div>
+        </div>
+        <div>
+          <label class="civ-field__label" for="loc">Location</label>
+          <input id="loc" class="civ-input" placeholder="e.g. Riverside, Madison, Park Ln" style="margin-top:var(--space-2);" data-zone-input />
+        </div>
+        <div>
+          <label class="civ-field__label">Priority</label>
+          <div class="civ-cluster" style="margin-top:var(--space-2);">
+            <button class="civ-chip" data-filter-priority="all">All</button>
+            <button class="civ-chip" data-filter-priority="low">Low</button>
+            <button class="civ-chip" data-filter-priority="medium">Medium</button>
+            <button class="civ-chip" data-filter-priority="high">High</button>
+            <button class="civ-chip" data-filter-priority="urgent">Urgent</button>
+          </div>
+        </div>
+        <div>
+          <label class="civ-field__label">Reporter</label>
+          <div class="civ-radio-group" style="margin-top:var(--space-2);" id="reporterGroup">
+            <label class="civ-radio"><input type="radio" name="rep" value="all" /> All</label>
+            <label class="civ-radio"><input type="radio" name="rep" value="with-email" /> With email</label>
+            <label class="civ-radio"><input type="radio" name="rep" value="anonymous" /> Anonymous</label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="civ-drawer__footer">
+      <div style="display:flex;justify-content:flex-end;gap:var(--space-3);">
+        <button class="civ-btn civ-btn--ghost" onclick="CIV.closeDrawer('filtersDrawer')">Cancel</button>
+        <button class="civ-btn civ-btn--primary" id="applyFiltersBtn">Apply</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Report Detail Drawer (initially closed) -->
+  <div class="civ-drawer-backdrop" id="detailBackdrop"></div>
+  <aside class="civ-drawer civ-drawer--right" id="reportDrawer" role="dialog" aria-modal="true" aria-label="Report detail">
+    <!-- Content populated by JS when a row is clicked -->
+  </aside>
+
+  <!-- Page-level wiring -->
+  <script>
+    (function wireQueuePage() {
+      function ready(fn) {
+        if (document.readyState !== 'loading') fn();
+        else document.addEventListener('DOMContentLoaded', fn);
+      }
+      ready(() => {
+        if (!window.CIV || !CIV.ui) return;
+        document.querySelectorAll('th[data-sort-key]').forEach((th) => {
+          th.style.cursor = 'pointer';
+          th.addEventListener('click', () => CIV.actions.setSort(th.dataset.sortKey));
+        });
+        const perPage = document.getElementById('perPageSelect');
+        if (perPage) {
+          perPage.value = String(CIV.state.store.pagination.perPage);
+          perPage.addEventListener('change', () => CIV.actions.setPerPage(parseInt(perPage.value, 10)));
+        }
+        const drawer = document.getElementById('filtersDrawer');
+        if (drawer) {
+          drawer.querySelectorAll('[data-filter-status]').forEach((b) => {
+            b.addEventListener('click', () => {
+              drawer.querySelectorAll('[data-filter-status]').forEach((x) => x.classList.remove('civ-chip--active'));
+              b.classList.add('civ-chip--active');
+            });
+          });
+          drawer.querySelectorAll('[data-filter-category]').forEach((b) => {
+            b.addEventListener('click', () => {
+              drawer.querySelectorAll('[data-filter-category]').forEach((x) => x.classList.remove('civ-chip--active'));
+              b.classList.add('civ-chip--active');
+            });
+          });
+          drawer.querySelectorAll('[data-filter-priority]').forEach((b) => {
+            b.addEventListener('click', () => {
+              drawer.querySelectorAll('[data-filter-priority]').forEach((x) => x.classList.remove('civ-chip--active'));
+              b.classList.add('civ-chip--active');
+            });
+          });
+          const applyBtn = document.getElementById('applyFiltersBtn');
+          if (applyBtn) applyBtn.addEventListener('click', () => {
+            const status = drawer.querySelector('[data-filter-status].civ-chip--active');
+            const cat = drawer.querySelector('[data-filter-category].civ-chip--active');
+            const pri = drawer.querySelector('[data-filter-priority].civ-chip--active');
+            const dateRadio = drawer.querySelector('input[name="date"]:checked');
+            const repRadio = drawer.querySelector('input[name="rep"]:checked');
+            const locInput = drawer.querySelector('[data-zone-input]');
+            const searchInput = document.getElementById('searchBox');
+            if (status) CIV.actions.setStatusFilter(status.dataset.filterStatus);
+            if (cat) CIV.actions.setCategoryFilter(cat.dataset.filterCategory);
+            if (pri) CIV.actions.setPriorityFilter(pri.dataset.filterPriority);
+            if (dateRadio) CIV.actions.setDateRange(dateRadio.value === 'all' ? null : dateRadio.value);
+            if (repRadio) CIV.actions.setReporterFilter(repRadio.value);
+            if (locInput) CIV.actions.setZoneFilter(locInput.value);
+            if (searchInput) CIV.actions.setSearch(searchInput.value);
+            CIV.closeDrawer('filtersDrawer');
+            CIV.toast('Filters applied');
+          });
+          const resetBtn = document.getElementById('resetFiltersBtn');
+          if (resetBtn) resetBtn.addEventListener('click', () => CIV.actions.clearFilters());
+        }
+        const avatarBtn = document.getElementById('avatarBtn');
+        if (avatarBtn) {
+          avatarBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            CIV.openPopover('accountPopover', avatarBtn);
+          });
+        }
+        CIV.ui.renderQueue();
+        if (typeof CIV.ui.syncFiltersDrawer === 'function') CIV.ui.syncFiltersDrawer();
+      });
+    })();
+  </script>
+
+  <!-- Duplicate picker modal -->
+  <div class="civ-modal-backdrop" id="duplicateModal" aria-hidden="true">
+    <div class="civ-modal" role="dialog" aria-modal="true" aria-label="Mark as duplicate">
+      <div class="civ-modal__header">
+        <h2 class="civ-modal__title">Mark as duplicate</h2>
+        <button class="civ-close-btn" onclick="CIV.closeModal('duplicateModal')" aria-label="Close">×</button>
+      </div>
+      <div class="civ-modal__body">
+        <p class="t-body-sm t-muted" style="margin-bottom:var(--space-4);">Pick the report this duplicates. The new report will be hidden from the queue.</p>
+        <input class="civ-input" data-dup-search placeholder="Search by ID, category, location…" style="margin-bottom:var(--space-4);" />
+        <div class="civ-stack-sm" data-duplicate-list></div>
+      </div>
+      <div class="civ-modal__footer">
+        <button class="civ-btn civ-btn--ghost" data-dup-cancel>Cancel</button>
+        <button class="civ-btn civ-btn--primary" data-dup-save>Link as duplicate</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Resolution form modal -->
+  <div class="civ-modal-backdrop" id="resolutionModal" aria-hidden="true">
+    <div class="civ-modal" role="dialog" aria-modal="true" aria-label="Mark resolved">
+      <div class="civ-modal__header">
+        <h2 class="civ-modal__title">Mark resolved</h2>
+        <button class="civ-close-btn" onclick="CIV.closeModal('resolutionModal')" aria-label="Close">×</button>
+      </div>
+      <div class="civ-modal__body">
+        <div class="civ-field">
+          <label class="civ-field__label" for="resNote">Resolution note <span class="civ-field__required">*</span></label>
+          <textarea id="resNote" class="civ-textarea" maxlength="1000" placeholder="What did the team do? E.g., 'Bulb replaced; tested on 2026-08-29.'"></textarea>
+        </div>
+        <div class="civ-field" style="margin-top:var(--space-4);">
+          <label class="civ-field__label">After-photo (optional)</label>
+          <label class="civ-dropzone" style="margin-top:var(--space-2);">
+            <span class="civ-dropzone__icon" aria-hidden="true">📷</span>
+            <span class="t-body-sm t-muted">Add a photo showing the fix</span>
+          </label>
+        </div>
+      </div>
+      <div class="civ-modal__footer">
+        <button class="civ-btn civ-btn--ghost" data-resolve-cancel>Cancel</button>
+        <button class="civ-btn civ-btn--primary" data-resolve-save>Save resolution</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reopen modal -->
+  <div class="civ-modal-backdrop" id="reopenModal" aria-hidden="true">
+    <div class="civ-modal" role="dialog" aria-modal="true" aria-label="Reopen report">
+      <div class="civ-modal__header">
+        <h2 class="civ-modal__title">Reopen report</h2>
+        <button class="civ-close-btn" onclick="CIV.closeModal('reopenModal')" aria-label="Close">×</button>
+      </div>
+      <div class="civ-modal__body">
+        <div class="civ-field">
+          <label class="civ-field__label" for="reopenNote">Reopen reason <span class="civ-field__required">*</span></label>
+          <textarea id="reopenNote" class="civ-textarea" maxlength="500" placeholder="Why is this being reopened? E.g., 'Resident reports bulb still out.'"></textarea>
+        </div>
+      </div>
+      <div class="civ-modal__footer">
+        <button class="civ-btn civ-btn--ghost" data-reopen-cancel>Cancel</button>
+        <button class="civ-btn civ-btn--primary" data-reopen-save>Reopen report</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

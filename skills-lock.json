@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "wds-4-ux-design": {
+      "source": "bmad-code-org/bmad-method-wds-expansion",
+      "sourceType": "github",
+      "skillPath": "src/workflows/wds-4-ux-design/SKILL.md",
+      "computedHash": "4c8959e2c446fdfa58d99e34d9aed488c851ed56f464fcbebcb5b7eec1fe582f"
+    }
+  }
+}

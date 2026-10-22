@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Citizen Portal — ReportIt</title>
+  <link rel="stylesheet" href="../../styles/tokens.css" />
+  <link rel="stylesheet" href="../../styles/base.css" />
+  <link rel="stylesheet" href="../../styles/components.css" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 22.5 L4.5 13.5 A7.5 7.5 0 1 1 19.5 13.5 Z' fill='%232F6F4E'/><circle cx='12' cy='10.5' r='3.5' fill='white'/><path d='M9.7 10.6 L11.3 12.2 L14.4 9' stroke='%232F6F4E' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>" />
+  <style>
+    .citizen-hero {
+      background: linear-gradient(180deg, var(--color-brand-soft) 0%, var(--color-bg) 100%);
+      padding: var(--space-12) var(--space-6);
+      border-bottom: 1px solid var(--color-border);
+    }
+    @media (min-width: 1024px) {
+      .citizen-hero { padding: var(--space-16) var(--space-8); }
+    }
+    .citizen-hero__inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--space-8);
+      align-items: center;
+    }
+    @media (min-width: 1024px) {
+      .citizen-hero__inner { grid-template-columns: 1.4fr 1fr; gap: var(--space-12); }
+    }
+    .citizen-hero__eyebrow {
+      font-size: var(--text-caption);
+      font-weight: var(--weight-semibold);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--color-brand);
+      margin-bottom: var(--space-3);
+    }
+    .citizen-hero__title {
+      font-size: var(--text-display);
+      font-weight: var(--weight-bold);
+      color: var(--color-ink);
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+    }
+    @media (min-width: 1024px) {
+      .citizen-hero__title { font-size: 3rem; line-height: 1.1; }
+    }
+    .citizen-hero__lede {
+      margin-top: var(--space-4);
+      font-size: var(--text-body);
+      color: var(--color-ink-muted);
+      max-width: 56ch;
+      line-height: 1.6;
+    }
+    .citizen-hero__cta {
+      margin-top: var(--space-6);
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-3);
+    }
+    .citizen-hero__card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-6);
+      box-shadow: var(--shadow-md);
+    }
+    .citizen-hero__card h3 {
+      font-size: var(--text-h3);
+      font-weight: var(--weight-semibold);
+      margin-bottom: var(--space-4);
+      color: var(--color-ink);
+    }
+    .citizen-hero__card ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+    .citizen-hero__card li {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-3);
+      font-size: var(--text-body-sm);
+      color: var(--color-ink-muted);
+      line-height: 1.5;
+    }
+    .citizen-hero__card li strong { color: var(--color-ink); display: block; }
+    .citizen-hero__icon {
+      flex-shrink: 0;
+      width: 28px; height: 28px;
+      border-radius: var(--radius-sm);
+      background: var(--color-brand-soft);
+      color: var(--color-brand);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .citizen-topbar {
+      background: var(--color-surface);
+      border-bottom: 1px solid var(--color-border);
+      padding: var(--space-3) var(--space-6);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .citizen-topbar__inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: var(--space-6);
+      flex-wrap: wrap;
+    }
+    .citizen-topbar__links { flex: 1; }
+
+    .citizen-flow {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: var(--space-12) var(--space-6);
+    }
+    @media (min-width: 1024px) {
+      .citizen-flow { padding: var(--space-16) var(--space-8); }
+    }
+    .citizen-flow__group { margin-bottom: var(--space-12); }
+    .citizen-flow__title {
+      font-size: var(--text-h2);
+      font-weight: var(--weight-semibold);
+      margin-bottom: var(--space-2);
+      color: var(--color-ink);
+    }
+    .citizen-flow__sub {
+      color: var(--color-ink-muted);
+      margin-bottom: var(--space-6);
+      font-size: var(--text-body);
+    }
+    .citizen-flow__grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: var(--space-4);
+    }
+    .citizen-flow__card {
+      display: block;
+      padding: var(--space-5);
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      text-decoration: none;
+      color: inherit;
+      transition: border-color var(--motion-fast), transform var(--motion-fast), box-shadow var(--motion-fast);
+    }
+    .citizen-flow__card:hover {
+      border-color: var(--color-brand);
+      text-decoration: none;
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+    .citizen-flow__card-tag {
+      font-size: var(--text-caption);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-ink-subtle);
+      font-weight: var(--weight-semibold);
+    }
+    .citizen-flow__card-name {
+      margin-top: var(--space-3);
+      font-weight: var(--weight-semibold);
+      font-size: var(--text-body);
+      color: var(--color-ink);
+    }
+    .citizen-flow__card-note {
+      margin-top: var(--space-2);
+      font-size: var(--text-body-sm);
+      color: var(--color-ink-muted);
+      line-height: 1.5;
+    }
+    .citizen-flowchain {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: var(--space-3);
+    }
+    .citizen-flowchain__step {
+      padding: var(--space-5);
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+      transition: border-color var(--motion-fast), transform var(--motion-fast), box-shadow var(--motion-fast);
+    }
+    .citizen-flowchain__step:hover {
+      border-color: var(--color-brand);
+      text-decoration: none;
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-sm);
+    }
+    .citizen-flowchain__num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px; height: 24px;
+      border-radius: var(--radius-pill);
+      background: var(--color-brand-soft);
+      color: var(--color-brand);
+      font-size: var(--text-caption);
+      font-weight: var(--weight-semibold);
+    }
+    .citizen-flowchain__name { font-weight: var(--weight-semibold); font-size: var(--text-body-sm); color: var(--color-ink); }
+    .citizen-flowchain__role { font-size: var(--text-caption); color: var(--color-ink-muted); line-height: 1.4; }
+  </style>
+</head>
+<body class="civ-page civ-page--citizen">
+  <a class="civ-skip" href="#main">Skip to main content</a>
+
+  <!-- Site nav -->
+  <nav class="citizen-topbar" aria-label="Primary">
+    <div class="citizen-topbar__inner">
+      <a class="civ-logo civ-logo--citizen" href="index.html">
+        <span class="civ-logo__mark" aria-hidden="true"></span>
+        <span class="civ-logo__words">
+          <span class="civ-logo__primary">ReportIt</span>
+          <span class="civ-logo__sub">[Your City] · Citizen Portal</span>
+        </span>
+      </a>
+
+      <div class="citizen-topbar__links">
+        <nav class="civ-nav" aria-label="Sections">
+          <a class="civ-nav__item civ-nav__item--active" href="index.html">Overview</a>
+          <a class="civ-nav__item" href="01-submit.html">Report a problem</a>
+          <a class="civ-nav__item" href="04-personal-history.html">My reports</a>
+        </nav>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <header class="citizen-hero">
+    <div class="citizen-hero__inner">
+      <div>
+        <div class="citizen-hero__eyebrow">Citizen Portal</div>
+        <h1 class="citizen-hero__title">Report problems in your neighborhood.<br/>Watch them get fixed.</h1>
+        <p class="citizen-hero__lede">
+          Tell us about a streetlight, pothole, drainage, garbage, or noise issue. We'll route it to the right team and email you updates — no account required.
+        </p>
+        <div class="citizen-hero__cta">
+          <a class="civ-btn civ-btn--primary" href="01-submit.html">
+            Report a problem →
+          </a>
+          <a class="civ-btn civ-btn--ghost" href="04-personal-history.html">
+            Sign in to see my reports
+          </a>
+        </div>
+      </div>
+
+      <aside class="citizen-hero__card">
+        <h3>How it works</h3>
+        <ul>
+          <li>
+            <span class="citizen-hero__icon" aria-hidden="true">📷</span>
+            <div>
+              <strong>1. Snap a photo</strong>
+              Take a picture of the problem and tell us roughly where it is.
+            </div>
+          </li>
+          <li>
+            <span class="citizen-hero__icon" aria-hidden="true">🆔</span>
+            <div>
+              <strong>2. Get a tracking ID</strong>
+              We'll give you a short code the moment your report is submitted.
+            </div>
+          </li>
+          <li>
+            <span class="citizen-hero__icon" aria-hidden="true">✉</span>
+            <div>
+              <strong>3. Get updates by email</strong>
+              We'll let you know when the city looks at it, starts work, and resolves it.
+            </div>
+          </li>
+          <li>
+            <span class="citizen-hero__icon" aria-hidden="true">🔁</span>
+            <div>
+              <strong>4. Tell us if it wasn't fixed</strong>
+              If something's still wrong, flag it and a staff member will take another look.
+            </div>
+          </li>
+        </ul>
+      </aside>
+    </div>
+  </header>
+
+  <main id="main" class="citizen-flow">
+
+    <!-- End-to-end flow -->
+    <section class="citizen-flow__group">
+      <h2 class="citizen-flow__title">What happens after you submit</h2>
+      <p class="citizen-flow__sub">From report to resolution — usually in under a week.</p>
+      <div class="citizen-flowchain">
+        <a class="citizen-flowchain__step" href="01-submit.html">
+          <span class="citizen-flowchain__num">1</span>
+          <span class="citizen-flowchain__name">Submit a report</span>
+          <span class="citizen-flowchain__role">Photo + location</span>
+        </a>
+        <a class="citizen-flowchain__step" href="02-confirmation.html">
+          <span class="citizen-flowchain__num">2</span>
+          <span class="citizen-flowchain__name">Confirmation</span>
+          <span class="citizen-flowchain__role">Tracking ID issued</span>
+        </a>
+        <a class="citizen-flowchain__step" href="03-tracking-acknowledged.html">
+          <span class="citizen-flowchain__num">3</span>
+          <span class="citizen-flowchain__name">Acknowledged</span>
+          <span class="citizen-flowchain__role">Triage in progress</span>
+        </a>
+        <a class="citizen-flowchain__step" href="03-tracking-in-progress.html">
+          <span class="citizen-flowchain__num">4</span>
+          <span class="citizen-flowchain__name">In progress</span>
+          <span class="citizen-flowchain__role">Work has started</span>
+        </a>
+        <a class="citizen-flowchain__step" href="03-tracking-resolved.html">
+          <span class="citizen-flowchain__num">5</span>
+          <span class="citizen-flowchain__name">Resolved</span>
+          <span class="citizen-flowchain__role">Done — verify & close</span>
+        </a>
+        <a class="citizen-flowchain__step" href="03-tracking-disputed.html">
+          <span class="citizen-flowchain__num">6</span>
+          <span class="citizen-flowchain__name">Disputed</span>
+          <span class="citizen-flowchain__role">Flag for re-review</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- Account & help -->
+    <section class="citizen-flow__group">
+      <h2 class="citizen-flow__title">Your reports & help</h2>
+      <p class="citizen-flow__sub">Optional account, magic-link sign-in, and what to do if your tracking ID doesn't work.</p>
+      <div class="citizen-flow__grid">
+        <a class="citizen-flow__card" href="04-personal-history.html">
+          <div class="citizen-flow__card-tag">Account</div>
+          <div class="citizen-flow__card-name">Personal History</div>
+          <div class="citizen-flow__card-note">See every report you've ever made (magic-link sign-in).</div>
+        </a>
+        <a class="citizen-flow__card" href="04b-magic-link-request.html">
+          <div class="citizen-flow__card-tag">Sign in</div>
+          <div class="citizen-flow__card-name">Sign-in link request</div>
+          <div class="citizen-flow__card-note">Enter your email and we'll send you a one-time link.</div>
+        </a>
+        <a class="citizen-flow__card" href="07-email-magic-link.html">
+          <div class="citizen-flow__card-tag">Email</div>
+          <div class="citizen-flow__card-name">Sign-in email</div>
+          <div class="citizen-flow__card-note">What the link in your inbox looks like.</div>
+        </a>
+        <a class="citizen-flow__card" href="08-invalid-tracking.html">
+          <div class="citizen-flow__card-tag">Help</div>
+          <div class="citizen-flow__card-name">Tracking not found</div>
+          <div class="citizen-flow__card-note">What happens if you mistype or lose your tracking ID.</div>
+        </a>
+        <a class="citizen-flow__card" href="05-email-acknowledgement.html">
+          <div class="citizen-flow__card-tag">Email</div>
+          <div class="citizen-flow__card-name">Acknowledgement email</div>
+          <div class="citizen-flow__card-note">The first message you'll get after submitting.</div>
+        </a>
+        <a class="citizen-flow__card" href="06-email-status-change.html">
+          <div class="citizen-flow__card-tag">Email</div>
+          <div class="citizen-flow__card-name">Status change email</div>
+          <div class="citizen-flow__card-note">Updates each time the status moves forward.</div>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="civ-site-footer">
+    <div class="civ-site-footer__inner">
+      <div class="civ-site-footer__brand">
+        <span class="civ-logo__primary">ReportIt</span>
+        <span class="civ-logo__sub">[Your City] · Public Works Department</span>
+      </div>
+      <nav class="civ-site-footer__links" aria-label="Footer">
+        <a href="#" onclick="event.preventDefault(); CIV.toast('Privacy policy')">Privacy</a>
+        <a href="#" onclick="event.preventDefault(); CIV.toast('Accessibility statement')">Accessibility</a>
+        <a href="mailto:civic@city.gov">Contact</a>
+        <a href="tel:+15555550199">(555) 555-0199</a>
+      </nav>
+      <div class="civ-site-footer__legal">
+        © 2026 ReportIt · [Your City]. A public service.
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Toast helper — stubbed if app.js isn't loaded yet on the landing page.
+    window.CIV = window.CIV || { toast: function (m) { console.log('[CIV]', m); } };
+  </script>
+
+  <style>
+    .civ-site-footer {
+      margin-top: 0;
+      padding: var(--space-10) var(--space-6);
+      background: var(--color-surface-muted);
+      border-top: 1px solid var(--color-border);
+    }
+    .civ-site-footer__inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--space-5);
+      align-items: start;
+    }
+    @media (min-width: 768px) {
+      .civ-site-footer__inner {
+        grid-template-columns: 2fr 2fr 1fr;
+        align-items: center;
+      }
+    }
+    .civ-site-footer__brand { display: flex; flex-direction: column; gap: 2px; }
+    .civ-site-footer__links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-5);
+      font-size: var(--text-body-sm);
+    }
+    .civ-site-footer__links a {
+      color: var(--color-ink-muted);
+      text-decoration: none;
+    }
+    .civ-site-footer__links a:hover { color: var(--color-brand); text-decoration: underline; }
+    .civ-site-footer__legal {
+      font-size: var(--text-caption);
+      color: var(--color-ink-subtle);
+      text-align: left;
+    }
+    @media (min-width: 768px) {
+      .civ-site-footer__legal { text-align: right; }
+    }
+  </style>
+</body>
+</html>

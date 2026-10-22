@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Report received — [Your City] ReportIt</title>
+  <link rel="stylesheet" href="../../styles/tokens.css" />
+  <link rel="stylesheet" href="../../styles/base.css" />
+  <link rel="stylesheet" href="../../styles/components.css" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 22.5 L4.5 13.5 A7.5 7.5 0 1 1 19.5 13.5 Z' fill='%232F6F4E'/><circle cx='12' cy='10.5' r='3.5' fill='white'/><path d='M9.7 10.6 L11.3 12.2 L14.4 9' stroke='%232F6F4E' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>" />
+  <script defer src="../../scripts/app.js"></script>
+  <script defer src="../../scripts/interactions.js"></script>
+</head>
+<body class="civ-page civ-page--citizen">
+  <a class="civ-skip" href="#main">Skip to main content</a>
+
+  <div class="civ-shell-citizen">
+
+    <!-- Left rail (md+) -->
+    <aside class="civ-rail" aria-label="Primary">
+      <a class="civ-logo civ-logo--citizen" href="../../index.html">
+        <span class="civ-logo__mark" aria-hidden="true"></span>
+        <span class="civ-logo__words">
+          <span class="civ-logo__primary">ReportIt</span>
+          <span class="civ-logo__sub">[Your City] · Public Works</span>
+        </span>
+      </a>
+
+      <nav class="civ-rail__nav" aria-label="Sections">
+        <a class="civ-nav__item civ-nav__item--active" href="01-submit.html">📝 Report a problem</a>
+        <a class="civ-nav__item" href="04-personal-history.html">📋 My reports</a>
+        <a class="civ-nav__item" href="#" onclick="event.preventDefault(); CIV.toast('Help center')">❓ Help</a>
+        <a class="civ-nav__item" href="#" onclick="event.preventDefault(); CIV.toast('About this service')">ℹ About</a>
+      </nav>
+
+      <div class="civ-rail__footer">
+        <strong>Need help?</strong>
+        Call <a href="tel:+15555550199">(555) 555-0199</a><br>
+        Mon–Fri 8am–6pm
+      </div>
+    </aside>
+
+    <!-- Mobile header (base/sm only) -->
+    <div class="civ-shell-citizen__main">
+      <header class="civ-mobile-header">
+        <a class="civ-logo civ-logo--citizen" href="../../index.html">
+          <span class="civ-logo__mark" aria-hidden="true"></span>
+          <span class="civ-logo__words">
+            <span class="civ-logo__primary">ReportIt</span>
+            <span class="civ-logo__sub">[Your City] · Public Works</span>
+          </span>
+        </a>
+        <a class="civ-nav__item" href="01-submit.html" style="font-size:var(--text-body-sm);">+ Report</a>
+      </header>
+
+      <main id="main" class="civ-shell-citizen__content">
+    <div class="civ-container civ-container--citizen">
+
+      <!-- Hero -->
+      <div class="civ-hero">
+        <div class="civ-hero__icon" aria-label="Report submitted">✓</div>
+        <h1 class="t-display">We've received your report.</h1>
+        <p class="t-body t-muted" style="margin-top:var(--space-3);">Here's your tracking ID — save it to check what happens next.</p>
+      </div>
+
+      <!-- Tracking ID card -->
+      <div class="civ-card civ-card--muted civ-stack">
+        <span class="civ-status-hero__id-label t-center" style="display:block;">Your tracking ID</span>
+        <div class="civ-tracking-id t-center" id="trackingId">CIV-2026-9F4A</div>
+        <div class="t-center">
+          <button class="civ-btn civ-btn--ghost" id="copyBtn" aria-live="polite">
+            <span aria-hidden="true">📋</span> <span id="copyLabel">Copy ID</span>
+          </button>
+        </div>
+        <p class="t-body-sm t-muted t-center" id="emailNote" style="margin:0;"></p>
+      </div>
+
+      <!-- What happens next -->
+      <section style="margin-top:var(--space-8);">
+        <h2 class="t-h3" style="margin-bottom:var(--space-3);">What happens next</h2>
+        <ol class="civ-stack" style="counter-reset: step;">
+          <li class="civ-card civ-card--muted" style="display:flex;gap:var(--space-4);align-items:flex-start;">
+            <span class="t-h3 t-brand" style="flex-shrink:0;">1</span>
+            <div>
+              <div class="t-body" style="font-weight:var(--weight-medium);">The city team will look at this within 24 hours.</div>
+            </div>
+          </li>
+          <li class="civ-card civ-card--muted" style="display:flex;gap:var(--space-4);align-items:flex-start;">
+            <span class="t-h3 t-brand" style="flex-shrink:0;">2</span>
+            <div>
+              <div class="t-body" style="font-weight:var(--weight-medium);" id="step2">We'll email you when they do.</div>
+            </div>
+          </li>
+          <li class="civ-card civ-card--muted" style="display:flex;gap:var(--space-4);align-items:flex-start;">
+            <span class="t-h3 t-brand" style="flex-shrink:0;">3</span>
+            <div>
+              <div class="t-body" style="font-weight:var(--weight-medium);" id="step3">You can check anytime using the link in your email.</div>
+            </div>
+          </li>
+        </ol>
+      </section>
+
+      <!-- Action row -->
+      <div class="civ-stack" style="margin-top:var(--space-8);align-items:stretch;">
+        <a class="civ-btn civ-btn--primary civ-btn--full" id="checkStatusBtn">Check status now</a>
+        <a class="civ-btn civ-btn--ghost civ-btn--full" href="01-submit.html">Report another problem</a>
+      </div>
+
+    </div>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    // Read email from URL
+    const params = new URLSearchParams(window.location.search);
+    const trackingId = params.get('tracking_id') || CIV.demo.trackingId;
+    const email = params.get('email');
+    document.getElementById('trackingId').textContent = trackingId;
+    const checkBtn = document.getElementById('checkStatusBtn');
+    checkBtn.href = `03-tracking-in-progress.html?tracking_id=${trackingId}` + (email ? `&email=${encodeURIComponent(email)}` : '');
+
+    const note = document.getElementById('emailNote');
+    const step2 = document.getElementById('step2');
+    const step3 = document.getElementById('step3');
+    if (email) {
+      note.textContent = `We've also sent this to ${email}.`;
+      step2.textContent = "We'll email you when they do.";
+      step3.textContent = "You can check anytime using the link in your email.";
+    } else {
+      note.textContent = "You didn't leave an email — bookmark this page or save your tracking ID. It's the only way to check on this report.";
+      step2.textContent = "Bookmark this page — we'll update it here.";
+      step3.textContent = "You can check anytime by returning to this page.";
+    }
+
+    // Copy ID
+    document.getElementById('copyBtn').addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(trackingId);
+        const label = document.getElementById('copyLabel');
+        label.textContent = 'Copied!';
+        label.style.color = 'var(--color-success)';
+        setTimeout(() => { label.textContent = 'Copy ID'; label.style.color = ''; }, 2000);
+      } catch {
+        CIV.toast('Copy failed. Select the ID manually.');
+      }
+    });
+  </script>
+</body>
+</html>

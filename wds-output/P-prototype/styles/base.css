@@ -1,0 +1,384 @@
+/* =========================================================
+   Base — resets, typography, layout primitives, page chrome
+   ========================================================= */
+
+/* ---------- Reset ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: var(--font-sans);
+  font-size: var(--text-body);
+  line-height: 1.5;
+  color: var(--color-ink);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+img, svg { display: block; max-width: 100%; }
+button { font-family: inherit; }
+
+/* ---------- Skip link ---------- */
+.civ-skip {
+  position: absolute;
+  top: -100px; left: var(--space-3);
+  background: var(--color-ink);
+  color: var(--color-surface);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  z-index: 1000;
+  font-weight: var(--weight-semibold);
+  font-size: var(--text-body-sm);
+  transition: top var(--motion-fast);
+}
+.civ-skip:focus { top: var(--space-3); outline: 2px solid var(--color-focus); }
+
+/* ---------- Visually hidden ---------- */
+.civ-visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0,0,0,0);
+  white-space: nowrap; border: 0;
+}
+
+/* ---------- Page (base wrapper) ---------- */
+.civ-page { display: flex; flex-direction: column; min-height: 100vh; }
+.civ-page__main { flex: 1; }
+
+/* ---------- Containers ---------- */
+.civ-container {
+  width: 100%;
+  margin: 0 auto;
+  padding-left: var(--space-5);
+  padding-right: var(--space-5);
+  max-width: var(--container-citizen);
+}
+
+.civ-container--citizen       { max-width: var(--container-citizen); }
+.civ-container--citizen-narrow { max-width: var(--container-citizen); }
+.civ-container--citizen-wide  { max-width: var(--container-citizen-wide); }
+.civ-container--form          { max-width: 640px; }
+.civ-container--dashboard       { max-width: var(--container-dashboard); }
+.civ-container--dashboard-narrow{ max-width: var(--container-dashboard-narrow); }
+.civ-container--dashboard-wide  { max-width: var(--container-dashboard-wide); }
+
+/* ---------- Typography utilities (lightweight) ---------- */
+.t-h1 { font-size: var(--text-h1); font-weight: var(--weight-bold); line-height: var(--text-h1-lh); color: var(--color-ink); margin: 0; letter-spacing: -0.01em; }
+.t-h2 { font-size: var(--text-h2); font-weight: var(--weight-semibold); line-height: var(--text-h2-lh); color: var(--color-ink); margin: 0; }
+.t-h3 { font-size: var(--text-h3); font-weight: var(--weight-semibold); line-height: var(--text-h3-lh); color: var(--color-ink); margin: 0; }
+.t-body { font-size: var(--text-body); line-height: 1.5; }
+.t-body-sm { font-size: var(--text-body-sm); line-height: 1.5; }
+.t-caption { font-size: var(--text-caption); line-height: 1.4; }
+.t-muted { color: var(--color-ink-muted); }
+.t-subtle { color: var(--color-ink-subtle); }
+.t-mono { font-family: var(--font-mono); }
+.t-center { text-align: center; }
+
+/* ---------- Stack & grid (small layout primitives) ---------- */
+.civ-stack { display: flex; flex-direction: column; gap: var(--space-3); }
+.civ-stack-lg { display: flex; flex-direction: column; gap: var(--space-5); }
+
+.civ-grid { display: grid; gap: var(--space-4); }
+.civ-grid--cats { grid-template-columns: repeat(2, 1fr); }
+@media (min-width: 640px) {
+  .civ-grid--cats { grid-template-columns: repeat(3, 1fr); }
+}
+@media (min-width: 1024px) {
+  .civ-grid--cats { grid-template-columns: repeat(5, 1fr); }
+}
+
+/* ---------- Map + pin (placeholder) ---------- */
+.civ-map {
+  position: relative;
+  height: 180px;
+  background: var(--color-surface-muted);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background-image:
+    linear-gradient(135deg, var(--color-surface) 0%, var(--color-surface-muted) 100%);
+}
+.civ-pin {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -100%);
+  width: 16px; height: 16px;
+  border-radius: var(--radius-pill);
+  background: var(--color-brand);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+.civ-pin::after {
+  content: '';
+  position: absolute;
+  top: 100%; left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: var(--color-brand);
+}
+.civ-pin--placed {
+  background: var(--color-brand);
+}
+
+/* ---------- Responsive breakpoint behavior ---------- */
+/* md (≥768): dashboard gets its compact mode; citizen stays narrow */
+@media (min-width: 768px) {
+  .civ-container--citizen-narrow,
+  .civ-container--citizen,
+  .civ-container--citizen-wide { padding-left: var(--space-6); padding-right: var(--space-6); }
+  .civ-container--dashboard-narrow { max-width: var(--container-dashboard-narrow); }
+}
+/* lg (≥1024): citizen gets enriched typography; dashboard goes full layout */
+@media (min-width: 1024px) {
+  .civ-container--citizen-narrow { max-width: var(--container-citizen); }
+  .civ-container--citizen        { max-width: var(--container-citizen); }
+  .civ-container--citizen-wide   { max-width: var(--container-citizen-wide); }
+  .civ-container--dashboard { max-width: var(--container-dashboard); }
+}
+/* xl (≥1280): dashboard may use sidebar; citizen unchanged */
+@media (min-width: 1280px) {
+  /* no global overrides; components opt in */
+}
+/* 2xl (≥1536): wider dashboard */
+@media (min-width: 1536px) {
+  .civ-container--dashboard-wide { max-width: var(--container-dashboard-wide); }
+}
+
+/* ---------- Page--citizen enrichments at lg+ ---------- */
+@media (min-width: 1024px) {
+  .civ-page--citizen .civ-container--citizen-narrow {
+    padding-top: var(--space-12);
+    padding-bottom: var(--space-12);
+  }
+  .civ-page--citizen .t-h1 {
+    font-size: var(--text-h1-lg);
+    line-height: var(--text-h1-lg-lh);
+  }
+}
+
+/* ---------- Logo (Pin + Check mark) ---------- */
+/* All-CSS, no image files. Brand-green map pin with a check in the head. */
+/* Variants: --citizen (warm, prominent) and --dashboard (denser, smaller). */
+.civ-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  color: var(--color-ink);
+  text-decoration: none;
+  font-family: var(--font-sans);
+}
+.civ-logo:hover { text-decoration: none; color: var(--color-ink); }
+
+.civ-logo__mark {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border-radius: var(--radius-md);
+  background-color: var(--color-brand-soft);
+  /* Pin + check SVG — single source of truth. Swap this URL to rebrand. */
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 22.5 L4.5 13.5 A7.5 7.5 0 1 1 19.5 13.5 Z' fill='%232F6F4E'/><circle cx='12' cy='10.5' r='3.5' fill='white'/><path d='M9.7 10.6 L11.3 12.2 L14.4 9' stroke='%232F6F4E' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+  background-size: 22px 22px;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: inline-block;
+}
+
+.civ-logo__words {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+.civ-logo__primary {
+  font-size: var(--text-body);
+  font-weight: var(--weight-semibold);
+  color: var(--color-ink);
+  letter-spacing: -0.01em;
+}
+.civ-logo__sub {
+  font-size: var(--text-caption);
+  font-weight: var(--weight-regular);
+  color: var(--color-ink-muted);
+  margin-top: 1px;
+}
+
+/* Dashboard variant: smaller mark, denser type */
+.civ-logo--dashboard .civ-logo__mark {
+  width: 28px; height: 28px; border-radius: var(--radius-sm);
+  background-size: 18px 18px;
+}
+.civ-logo--dashboard .civ-logo__primary { font-size: var(--text-body-sm); }
+
+/* Citizen variant: slightly larger mark */
+.civ-logo--citizen .civ-logo__mark {
+  width: 40px; height: 40px;
+  background-size: 26px 26px;
+}
+
+/* ---------- Top nav (used by topbar and hero) ---------- */
+.civ-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+.civ-nav__item {
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  font-size: var(--text-body-sm);
+  font-weight: var(--weight-medium);
+  color: var(--color-ink-muted);
+  text-decoration: none;
+  transition: background var(--motion-fast), color var(--motion-fast);
+}
+.civ-nav__item:hover {
+  background: var(--color-surface-muted);
+  color: var(--color-ink);
+  text-decoration: none;
+}
+.civ-nav__item--active {
+  background: var(--color-brand-soft);
+  color: var(--color-brand-strong);
+  font-weight: var(--weight-semibold);
+}
+.civ-nav__item--active:hover {
+  background: var(--color-brand-soft);
+  color: var(--color-brand-strong);
+}
+
+/* ---------- Mobile header (citizen, base/sm only) ---------- */
+.civ-mobile-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-5);
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+@media (min-width: 768px) {
+  .civ-mobile-header { display: none; }
+}
+
+/* ---------- Rail (citizen left nav, md+) ---------- */
+.civ-rail {
+  display: none;
+  flex-direction: column;
+  gap: var(--space-6);
+  padding: var(--space-6) var(--space-5);
+  background: var(--color-surface);
+  border-right: 1px solid var(--color-border);
+  width: 240px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+@media (min-width: 768px) {
+  .civ-rail { display: flex; }
+}
+.civ-rail__nav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+.civ-rail__nav .civ-nav__item {
+  display: block;
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+}
+.civ-rail__footer {
+  margin-top: auto;
+  padding: var(--space-4);
+  background: var(--color-surface-muted);
+  border-radius: var(--radius-md);
+  font-size: var(--text-caption);
+  color: var(--color-ink-muted);
+  line-height: 1.5;
+}
+.civ-rail__footer strong { color: var(--color-ink); display: block; margin-bottom: 2px; }
+
+/* ---------- Shell: citizen (rail + main content) ---------- */
+.civ-shell-citizen {
+  display: flex;
+  flex: 1;
+  width: 100%;
+}
+.civ-shell-citizen__main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0; /* prevent flex overflow */
+}
+.civ-shell-citizen__content {
+  flex: 1;
+  padding: var(--space-5) var(--space-4) var(--space-10);
+}
+@media (min-width: 1024px) {
+  .civ-shell-citizen__content {
+    padding: var(--space-10) var(--space-6) var(--space-16);
+  }
+}
+
+/* ---------- Site footer ---------- */
+.civ-site-footer {
+  margin-top: var(--space-16);
+  padding: var(--space-10) var(--space-6);
+  background: var(--color-surface-muted);
+  border-top: 1px solid var(--color-border);
+}
+.civ-site-footer__inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-5);
+  align-items: start;
+}
+@media (min-width: 768px) {
+  .civ-site-footer__inner {
+    grid-template-columns: 2fr 2fr 1fr;
+    align-items: center;
+  }
+}
+.civ-site-footer__brand { display: flex; flex-direction: column; gap: 2px; }
+.civ-site-footer__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-5);
+  font-size: var(--text-body-sm);
+}
+.civ-site-footer__links a {
+  color: var(--color-ink-muted);
+  text-decoration: none;
+}
+.civ-site-footer__links a:hover { color: var(--color-brand); text-decoration: underline; }
+.civ-site-footer__legal {
+  font-size: var(--text-caption);
+  color: var(--color-ink-subtle);
+  text-align: left;
+}
+@media (min-width: 768px) {
+  .civ-site-footer__legal { text-align: right; }
+}
+
+/* ---------- Top bar (dashboard) ---------- */
+.civ-topbar {
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  padding: var(--space-3) var(--space-6);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.civ-topbar__inner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+  flex-wrap: wrap;
+}
+.civ-topbar__brand { flex-shrink: 0; }
+.civ-topbar__links { flex: 1; }

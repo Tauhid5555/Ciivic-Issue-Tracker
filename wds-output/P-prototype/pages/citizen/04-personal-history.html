@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Your reports — [Your City] ReportIt</title>
+  <link rel="stylesheet" href="../../styles/tokens.css" />
+  <link rel="stylesheet" href="../../styles/base.css" />
+  <link rel="stylesheet" href="../../styles/components.css" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 22.5 L4.5 13.5 A7.5 7.5 0 1 1 19.5 13.5 Z' fill='%232F6F4E'/><circle cx='12' cy='10.5' r='3.5' fill='white'/><path d='M9.7 10.6 L11.3 12.2 L14.4 9' stroke='%232F6F4E' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>" />
+  <script defer src="../../scripts/app.js"></script>
+  <script defer src="../../scripts/interactions.js"></script>
+</head>
+<body class="civ-page civ-page--citizen">
+  <a class="civ-skip" href="#main">Skip to main content</a>
+
+  <div class="civ-shell-citizen">
+
+    <!-- Left rail (md+) -->
+    <aside class="civ-rail" aria-label="Primary">
+      <a class="civ-logo civ-logo--citizen" href="../../index.html">
+        <span class="civ-logo__mark" aria-hidden="true"></span>
+        <span class="civ-logo__words">
+          <span class="civ-logo__primary">ReportIt</span>
+          <span class="civ-logo__sub">[Your City] · Public Works</span>
+        </span>
+      </a>
+
+      <nav class="civ-rail__nav" aria-label="Sections">
+        <a class="civ-nav__item" href="01-submit.html">📝 Report a problem</a>
+        <a class="civ-nav__item civ-nav__item--active" href="04-personal-history.html">📋 My reports</a>
+        <a class="civ-nav__item" href="#" onclick="event.preventDefault(); CIV.toast('Help center')">❓ Help</a>
+        <a class="civ-nav__item" href="#" onclick="event.preventDefault(); CIV.toast('About this service')">ℹ About</a>
+      </nav>
+
+      <div class="civ-rail__footer">
+        <strong>Need help?</strong>
+        Call <a href="tel:+15555550199">(555) 555-0199</a><br>
+        Mon–Fri 8am–6pm
+      </div>
+    </aside>
+
+    <!-- Mobile header (base/sm only) -->
+    <div class="civ-shell-citizen__main">
+      <header class="civ-mobile-header">
+        <a class="civ-logo civ-logo--citizen" href="../../index.html">
+          <span class="civ-logo__mark" aria-hidden="true"></span>
+          <span class="civ-logo__words">
+            <span class="civ-logo__primary">ReportIt</span>
+            <span class="civ-logo__sub">[Your City] · Public Works</span>
+          </span>
+        </a>
+        <a class="civ-nav__item" href="01-submit.html" style="font-size:var(--text-body-sm);">+ Report</a>
+      </header>
+
+      <main id="main" class="civ-shell-citizen__content">
+    <div class="civ-container civ-container--citizen">
+
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:var(--space-3);margin-bottom:var(--space-2);">
+        <div>
+          <span class="t-eyebrow">Your reports</span>
+          <h1 class="t-h1" style="margin-top:var(--space-2);">Your reports</h1>
+          <p class="t-body-sm t-muted" style="margin-top:var(--space-1);">Signed in as aisha@example.com</p>
+        </div>
+        <button class="civ-btn civ-btn--ghost" onclick="CIV.toast('Signed out.'); setTimeout(()=>window.location.href='04b-magic-link-request.html', 600)">Sign out</button>
+      </div>
+
+      <!-- Filter chips -->
+      <div class="civ-cluster" style="margin-block:var(--space-4);">
+        <button class="civ-chip civ-chip--active" aria-pressed="true">All <span class="civ-chip__count">(5)</span></button>
+        <button class="civ-chip" aria-pressed="false">Open <span class="civ-chip__count">(3)</span></button>
+        <button class="civ-chip" aria-pressed="false">Resolved <span class="civ-chip__count">(1)</span></button>
+        <button class="civ-chip" aria-pressed="false">Disputed <span class="civ-chip__count">(1)</span></button>
+      </div>
+
+      <!-- Report list -->
+      <div class="civ-stack">
+        <a class="civ-report-card" href="03-tracking-in-progress.html?tracking_id=CIV-2026-9F4A">
+          <div class="civ-report-card__head">
+            <span class="civ-pill civ-pill--sm civ-pill--in-progress" data-status="in-progress">In Progress</span>
+            <span data-relative="2026-09-04T18:32:00">2 days ago</span>
+          </div>
+          <div class="civ-report-card__title"><span>💡</span> Streetlight</div>
+          <p class="civ-report-card__snippet">Streetlight at the corner of 5th &amp; Birch has been out for about a week. It's quite dark here at night…</p>
+        </a>
+        <a class="civ-report-card" href="03-tracking-resolved.html?tracking_id=CIV-2026-6F77">
+          <div class="civ-report-card__head">
+            <span class="civ-pill civ-pill--sm civ-pill--resolved" data-status="resolved">Resolved</span>
+            <span data-relative="2026-09-04T09:00:00">2 days ago</span>
+          </div>
+          <div class="civ-report-card__title"><span>🗑️</span> Garbage</div>
+          <p class="civ-report-card__snippet">Dumped mattress and couch cushions at the northeast corner of Elm Park, near the playground.</p>
+        </a>
+        <a class="civ-report-card" href="03-tracking-disputed.html?tracking_id=CIV-2026-0E88">
+          <div class="civ-report-card__head">
+            <span class="civ-pill civ-pill--sm civ-pill--disputed" data-status="disputed">Disputed</span>
+            <span data-relative="2026-09-03T13:00:00">3 days ago</span>
+          </div>
+          <div class="civ-report-card__title"><span>🕳️</span> Pothole</div>
+          <p class="civ-report-card__snippet">Large pothole near 12th &amp; Oak, about 2 feet across. Cars are swerving around it.</p>
+        </a>
+        <a class="civ-report-card" href="03-tracking-acknowledged.html?tracking_id=CIV-2026-4D55">
+          <div class="civ-report-card__head">
+            <span class="civ-pill civ-pill--sm civ-pill--acknowledged" data-status="acknowledged">Acknowledged</span>
+            <span data-relative="2026-09-05T14:30:00">yesterday</span>
+          </div>
+          <div class="civ-report-card__title"><span>🕳️</span> Pothole</div>
+          <p class="civ-report-card__snippet">Pothole on Birch between 8th and 9th. About a foot wide, getting bigger.</p>
+        </a>
+        <a class="civ-report-card" href="03-tracking-resolved.html?tracking_id=CIV-2026-3A91">
+          <div class="civ-report-card__head">
+            <span class="civ-pill civ-pill--sm civ-pill--resolved" data-status="resolved">Resolved</span>
+            <span data-relative="2026-08-22T10:00:00">2 weeks ago</span>
+          </div>
+          <div class="civ-report-card__title"><span>🌧️</span> Drainage</div>
+          <p class="civ-report-card__snippet">Storm drain on Maple &amp; 3rd is blocked — water pools during rain and floods the sidewalk.</p>
+        </a>
+      </div>
+
+      <p class="t-caption t-subtle t-center" style="margin-top:var(--space-8);">We only show reports submitted with this email address. <a href="04b-magic-link-request.html">Request a new magic link</a></p>
+    </div>
+      </main>
+    </div>
+  </div>
+  <script>
+    document.querySelectorAll('[data-relative]').forEach(el => el.textContent = CIV.relativeTime(el.dataset.relative));
+    // Filter chip toggle
+    document.querySelectorAll('.civ-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        document.querySelectorAll('.civ-chip').forEach(c => { c.classList.remove('civ-chip--active'); c.setAttribute('aria-pressed', 'false'); });
+        chip.classList.add('civ-chip--active');
+        chip.setAttribute('aria-pressed', 'true');
+      });
+    });
+  </script>
+</body>
+</html>

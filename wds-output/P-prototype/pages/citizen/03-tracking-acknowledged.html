@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tracking (Acknowledged) — [Your City] ReportIt</title>
+  <link rel="stylesheet" href="../../styles/tokens.css" />
+  <link rel="stylesheet" href="../../styles/base.css" />
+  <link rel="stylesheet" href="../../styles/components.css" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 22.5 L4.5 13.5 A7.5 7.5 0 1 1 19.5 13.5 Z' fill='%232F6F4E'/><circle cx='12' cy='10.5' r='3.5' fill='white'/><path d='M9.7 10.6 L11.3 12.2 L14.4 9' stroke='%232F6F4E' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>" />
+  <script defer src="../../scripts/app.js"></script>
+  <script defer src="../../scripts/interactions.js"></script>
+</head>
+<body class="civ-page civ-page--citizen">
+  <a class="civ-skip" href="#main">Skip to main content</a>
+
+  <div class="civ-shell-citizen">
+
+    <!-- Left rail (md+) -->
+    <aside class="civ-rail" aria-label="Primary">
+      <a class="civ-logo civ-logo--citizen" href="../../index.html">
+        <span class="civ-logo__mark" aria-hidden="true"></span>
+        <span class="civ-logo__words">
+          <span class="civ-logo__primary">ReportIt</span>
+          <span class="civ-logo__sub">[Your City] · Public Works</span>
+        </span>
+      </a>
+
+      <nav class="civ-rail__nav" aria-label="Sections">
+        <a class="civ-nav__item" href="01-submit.html">📝 Report a problem</a>
+        <a class="civ-nav__item" href="04-personal-history.html">📋 My reports</a>
+        <a class="civ-nav__item" href="#" onclick="event.preventDefault(); CIV.toast('Help center')">❓ Help</a>
+        <a class="civ-nav__item" href="#" onclick="event.preventDefault(); CIV.toast('About this service')">ℹ About</a>
+      </nav>
+
+      <div class="civ-rail__footer">
+        <strong>Need help?</strong>
+        Call <a href="tel:+15555550199">(555) 555-0199</a><br>
+        Mon–Fri 8am–6pm
+      </div>
+    </aside>
+
+    <!-- Mobile header (base/sm only) -->
+    <div class="civ-shell-citizen__main">
+      <header class="civ-mobile-header">
+        <a class="civ-logo civ-logo--citizen" href="../../index.html">
+          <span class="civ-logo__mark" aria-hidden="true"></span>
+          <span class="civ-logo__words">
+            <span class="civ-logo__primary">ReportIt</span>
+            <span class="civ-logo__sub">[Your City] · Public Works</span>
+          </span>
+        </a>
+        <a class="civ-nav__item" href="01-submit.html" style="font-size:var(--text-body-sm);">+ Report</a>
+      </header>
+
+      <main id="main" class="civ-shell-citizen__content">
+    <div class="civ-container civ-container--citizen civ-stack-lg">
+      <section class="civ-status-hero">
+        <div class="civ-status-hero__id">
+          <span class="civ-status-hero__id-label">Tracking ID</span>
+          <span class="civ-status-hero__id-code">CIV-2026-9F4A</span>
+        </div>
+        <div><span class="civ-pill civ-pill--lg civ-pill--acknowledged">Acknowledged</span></div>
+        <h1 class="t-display" style="margin-top:var(--space-2);">The team is looking at this.</h1>
+        <p class="t-caption t-muted">Last updated <span data-relative="2026-09-04T21:15:00">3 hours ago</span></p>
+        <div class="civ-status-hero__sla">Our team aims to resolve similar issues within 7 days.</div>
+      </section>
+
+      <section class="civ-card civ-stack">
+        <h2 class="t-h3">What you reported</h2>
+        <div style="display:flex;align-items:center;gap:var(--space-3);"><span style="font-size:24px;">💡</span><span class="t-body" style="font-weight:var(--weight-medium);">Streetlight</span></div>
+        <div><span class="t-caption t-muted">Submitted</span><div class="t-body-sm" data-relative="2026-09-04T18:32:00">2 days ago</div></div>
+        <div>
+          <span class="t-caption t-muted">Photo</span>
+          <div class="civ-photo-thumb civ-photo-thumb--md" data-lightbox="" style="margin-top:var(--space-2);cursor:pointer;background:var(--color-surface-muted);display:flex;align-items:center;justify-content:center;font-size:32px;">💡</div>
+        </div>
+        <div><span class="t-caption t-muted">Location</span><div class="t-body-sm">[Your City]</div></div>
+        <div>
+          <span class="t-caption t-muted">Description</span>
+          <blockquote class="civ-quote t-body-sm" style="margin-top:var(--space-2);">Streetlight at the corner of 5th &amp; Birch has been out for about a week. It's quite dark here at night and I'm worried about pedestrians.</blockquote>
+        </div>
+      </section>
+
+      <section>
+        <h2 class="t-h3" style="margin-bottom:var(--space-4);">What's happened so far</h2>
+        <ol class="civ-timeline">
+          <li class="civ-timeline__row civ-timeline__row--current">
+            <span class="civ-timeline__dot"></span>
+            <div class="civ-timeline__actor">The team <span class="civ-timeline__time" data-relative="2026-09-04T21:15:00">2 hours ago</span></div>
+            <div class="civ-timeline__title">Acknowledged</div>
+            <div class="civ-timeline__body">The team started looking at your streetlight report.</div>
+          </li>
+          <li class="civ-timeline__row">
+            <span class="civ-timeline__dot"></span>
+            <div class="civ-timeline__actor">System <span class="civ-timeline__time" data-relative="2026-09-04T18:32:00">2 days ago</span></div>
+            <div class="civ-timeline__title">Submitted</div>
+          </li>
+        </ol>
+      </section>
+
+      <section><a class="t-body-sm t-center" href="#" style="display:block;">Need to add something?</a></section>
+    </div>
+      </main>
+    </div>
+  </div>
+  <script>
+    document.querySelectorAll('[data-relative]').forEach(el => el.textContent = CIV.relativeTime(el.dataset.relative));
+  </script>
+</body>
+</html>
