@@ -4,11 +4,15 @@ import { api, ApiError, Category, SubmissionResult } from "../api";
 import { ErrorNote, fieldError } from "../components";
 import HeroShowcase from "../HeroShowcase";
 import LocationPicker, { inServiceArea } from "../LocationPicker";
+import CategoryPicker from "../CategoryPicker";
+import PhotoPicker from "../PhotoPicker";
+import { NextSteps } from "../components";
 
 const MAX_BYTES = 10 * 1024 * 1024;
 
 export default function Submit() {
   const [categories, setCategories] = useState<Category[]>([]);
+  const [categoriesLoaded, setCategoriesLoaded] = useState(false);
   const [result, setResult] = useState<SubmissionResult | null>(null);
   const [error, setError] = useState<unknown>(null);
   const [busy, setBusy] = useState(false);
@@ -19,7 +23,7 @@ export default function Submit() {
   const key = useRef(crypto.randomUUID().replace(/-/g, ""));
 
   useEffect(() => {
-    api.categories().then(setCategories).catch(setError);
+    api.categories().then((c) => { setCategories(c); setCategoriesLoaded(true); }).catch((e) => { setError(e); setCategoriesLoaded(true); });
   }, []);
 
   function useMyLocation() {
@@ -78,16 +82,7 @@ export default function Submit() {
       <p>Tell us what is wrong and where. You do not need an account.</p>
       <ErrorNote error={error} />
       <form className="card" onSubmit={onSubmit} noValidate>
-        <div className="field">
-          <label htmlFor="category">What kind of problem is it?</label>
-          <select id="category" name="category" required defaultValue="">
-            <option value="" disabled>Choose a category</option>
-            {categories.map((c) => (
-              <option key={c.categoryCode} value={c.categoryCode}>{c.label}</option>
-            ))}
-          </select>
-          <span className="err">{fieldError(error, "category")}</span>
-        </div>
+        <CategoryPicker categories={categories} loading={!categoriesLoaded} error={fieldError(error, "category")} />
 
         <div className="field">
           <label htmlFor="description">Describe the problem</label>
@@ -97,10 +92,12 @@ export default function Submit() {
 
         <fieldset className="field" style={{ border: 0, padding: 0, margin: 0 }}>
           <legend className="label">Where is it?</legend>
-          <button type="button" className="secondary" onClick={useMyLocation}>Use my current location</button>
+          <LocationPicker
+            lat={lat} lng={lng} onChange={(a, b) => { setLat(a); setLng(b); }}
+            actions={<button type="button" className="secondary locate" onClick={useMyLocation}>Use my location</button>}
+          />
           <span className="hint" role="status">{geoNote}</span>
-          <LocationPicker lat={lat} lng={lng} onChange={(a, b) => { setLat(a); setLng(b); }} />
-          <div className="row">
+          <div className="row coords">
             <div className="field">
               <label htmlFor="latitude">Latitude</label>
               <input id="latitude" name="latitude" inputMode="decimal" required value={lat} onChange={(e) => setLat(e.target.value)} />
@@ -114,11 +111,7 @@ export default function Submit() {
           </div>
         </fieldset>
 
-        <div className="field">
-          <label htmlFor="photo">Add a photo (JPEG, PNG or HEIC, up to 10 MB)</label>
-          <input id="photo" name="photo" type="file" accept="image/jpeg,image/png,image/heic" required />
-          <span className="err">{fieldError(error, "photo")}</span>
-        </div>
+        <PhotoPicker error={fieldError(error, "photo")} />
 
         <div className="field">
           <label htmlFor="email">Email (optional)</label>
@@ -131,6 +124,7 @@ export default function Submit() {
       </form>
       <p><Link to="/track">Already have a Tracking ID?</Link></p>
     </main>
+    <NextSteps />
     </div>
   );
 }

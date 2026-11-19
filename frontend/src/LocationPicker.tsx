@@ -1,6 +1,6 @@
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import { MapContainer, Marker, TileLayer, useMap, useMapEvents } from "react-leaflet";
 
 /**
@@ -20,6 +20,8 @@ const START_CENTER: [number, number] = [23.8103, 90.4125];
 const START_ZOOM = 12;
 const MIN_ZOOM = 11;
 const PLACED_ZOOM = 16;
+const SEARCH_PAUSE_MS = 600; // wait this long after the last keystroke before searching
+const MIN_GAP_MS = 1100; // the public Nominatim service allows about one request a second
 
 function clampToArea(p: { lat: number; lng: number }) {
   const [[s, w], [n, e]] = SERVICE_BOUNDS;
@@ -115,32 +117,53 @@ function Inner({ pos, onPick, onTileError }: { pos: Pos | null; onPick: (p: Pos)
   );
 }
 
-export default function LocationPicker({ lat, lng, onChange }: { lat: string; lng: string; onChange: (lat: string, lng: string) => void }) {
+export default function LocationPicker({ lat, lng, onChange, actions }: { lat: string; lng: string; onChange: (lat: string, lng: string) => void; actions?: ReactNode }) {
   const typed = parsePosition(lat, lng);
   const outside = !!typed && !inServiceArea(typed);
   const pos = typed && !outside ? typed : null;
   const [tilesFailed, setTilesFailed] = useState(false);
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<Place[] | null>(null);
-  const [searchState, setSearchState] = useState<"idle" | "busy" | "error">("idle");
+  const [searchState, setSearchState] = useState<"idle" | "waiting" | "busy" | "error">("idle");
   const abort = useRef<AbortController | null>(null);
+  const timer = useRef<number | undefined>(undefined);
+  const lastStart = useRef(0);
 
-  async function runSearch() {
-    const q = query.trim();
+  const cancel = () => { window.clearTimeout(timer.current); abort.current?.abort(); };
+  useEffect(() => cancel, []); // stop any pending search when the form closes
+
+  // Enter and the Search button call this at once; typing calls it after a short pause.
+  async function runSearch(text: string) {
+    const q = text.trim();
     if (q.length < 3) return;
-    abort.current?.abort();
+    cancel();
     const ctl = (abort.current = new AbortController());
+    lastStart.current = Date.now();
     setSearchState("busy");
     try {
-      setResults(await searchPlaces(q, ctl.signal));
+      const found = await searchPlaces(q, ctl.signal);
+      if (ctl.signal.aborted) return; // the person kept typing: this answer is for an old question
+      setResults(found);
       setSearchState("idle");
-    } catch (err) {
-      if ((err as Error).name === "AbortError") return;
+    } catch {
+      if (ctl.signal.aborted) return;
       setResults(null);
       setSearchState("error");
     }
   }
-  const choose = (p: Place) => { onChange(p.lat.toFixed(6), p.lng.toFixed(6)); setResults(null); };
+
+  function onQueryChange(text: string) {
+    setQuery(text);
+    cancel();
+    setResults(null); // never keep showing the answers to an earlier question
+    if (text.trim().length < 3) return setSearchState("idle");
+    setSearchState("waiting");
+    // Wait for a pause in typing, and never send requests closer together than the public service allows.
+    const wait = Math.max(SEARCH_PAUSE_MS, lastStart.current + MIN_GAP_MS - Date.now());
+    timer.current = window.setTimeout(() => void runSearch(text), wait);
+  }
+
+  const choose = (p: Place) => { cancel(); onChange(p.lat.toFixed(6), p.lng.toFixed(6)); setResults(null); setSearchState("idle"); };
   const center: [number, number] = pos ? [pos.lat, pos.lng] : START_CENTER;
 
   return (
@@ -150,16 +173,21 @@ export default function LocationPicker({ lat, lng, onChange }: { lat: string; ln
         {/* Not a <form>: this sits inside the report form, and Enter here must search, not send the report. */}
         <input
           id="place-search" type="search" placeholder="Search a street or area in Dhaka" value={query} autoComplete="off"
-          onChange={(e) => setQuery(e.target.value)}
-          onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); void runSearch(); } }}
+          onChange={(e) => onQueryChange(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") { e.preventDefault(); void runSearch(query); }
+            else if (e.key === "Escape") { cancel(); setResults(null); setSearchState("idle"); }
+          }}
         />
-        <button type="button" className="secondary" onClick={() => void runSearch()} disabled={searchState === "busy" || query.trim().length < 3}>
-          {searchState === "busy" ? "Searching…" : "Search"}
+        <button type="button" className="secondary" onClick={() => void runSearch(query)} disabled={query.trim().length < 3}>
+          {searchState === "busy" || searchState === "waiting" ? "Searching…" : "Search"}
         </button>
+        {actions}
       </div>
       <div role="status" className="hint">
+        {(searchState === "waiting" || searchState === "busy") && "Searching…"}
         {searchState === "error" && "Search is not available right now. Tap the map or type the latitude and longitude instead."}
-        {results && results.length === 0 && "Nothing found in Dhaka for that search. Try a nearby road or area name."}
+        {searchState === "idle" && results && results.length === 0 && "Nothing found in Dhaka for that search. Try a nearby road or area name."}
       </div>
       {results && results.length > 0 && (
         <ul className="picker-results" aria-label="Search results">

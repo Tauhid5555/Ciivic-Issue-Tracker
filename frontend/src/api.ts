@@ -156,4 +156,22 @@ export const api = {
   },
 };
 
-export const formatTime = (iso: string) => new Date(iso).toLocaleString();
+// Dates are shown in Dhaka time, day first, without seconds: "19 Nov 2026, 10:03 PM".
+const DATE_FMT = new Intl.DateTimeFormat("en-GB", {
+  day: "numeric", month: "short", year: "numeric", hour: "numeric", minute: "2-digit", hour12: true, timeZone: "Asia/Dhaka",
+});
+export const formatTime = (iso: string) => DATE_FMT.format(new Date(iso)).replace(/(am|pm)/, (m) => m.toUpperCase());
+
+/** "5 min ago", "3 h ago", "2 days ago"; older than a week falls back to the date. */
+export function timeAgo(iso: string, now = Date.now()): string {
+  const mins = Math.floor((now - new Date(iso).getTime()) / 60000);
+  if (mins < 1) return "just now";
+  if (mins < 60) return `${mins} min ago`;
+  if (mins < 60 * 24) return `${Math.floor(mins / 60)} h ago`;
+  if (mins < 60 * 24 * 7) return `${Math.floor(mins / 1440)} days ago`;
+  return formatTime(iso).split(",")[0];
+}
+
+/** Opens the position on OpenStreetMap (see risk R1: this leaves the site). */
+export const mapLink = (lat: number, lng: number) =>
+  `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}#map=17/${lat}/${lng}`;

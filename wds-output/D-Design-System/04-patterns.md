@@ -822,3 +822,25 @@ Pages 01, 02, 03, 08 (Citizen Portal) have **no header navigation** — the citi
 Pages 04 (Personal History) and 04b (Request Magic Link) have a minimal auth-state indicator: *Signed in as you@example.com*.
 
 This is **not** a top bar pattern — it's a *header strip* that varies per page. See individual page specs for behavior.
+
+---
+
+## 26. Landing composition as built (Nov 2026)
+
+The report page in the thin slice, from top to bottom. This is the composition to keep when the screens are rebuilt.
+
+1. **Header:** logo and name on the left, three links on the right, a thin gradient stripe along the top edge.
+2. **Two columns from 1024px up:** the showcase on the left (sticky while the form scrolls), the form on the right (640px, the Citizen Portal column width). Below 1024px the showcase shrinks to a smaller phone above the form, with the headline and floating badges hidden.
+3. **Form order:** category tiles, description, location (search and "Use my location" in one row, the map, then the smaller latitude and longitude fields), photo drop area, optional email, send button.
+4. **"What happens after you send a report":** a bar of three steps under both columns, with the full wording below. From 1024px up it is sticky: it stays at the bottom of the window while the page scrolls and comes to rest just above the footer. Below 1024px it is an ordinary block, because a pinned bar would cover too much of a phone screen.
+   - Layout: the heading on one line, then the three steps side by side, each an icon, a bold title and its text. About 150px tall on a wide screen, which is a sixth of a typical window; this is the cost of keeping the full wording in a pinned bar. If it proves too heavy, the options are a shorter text or a bar that does not stick.
+   - Wording (unchanged from the first version):
+     1. **We receive it:** "You get a Tracking ID straight away. Keep it: it is how you check on your report."
+     2. **Staff look at it:** "A member of staff reviews your report, sets a priority and acknowledges it."
+     3. **You can follow it:** "Use your Tracking ID any time to see each step, from received to resolved. If it is not fixed, you can tell us."
+5. **Footer:** brand, links, and the note that maps and place search are provided by OpenStreetMap and what that shares.
+
+**Rules this composition follows**
+- One brand colour (green) for actions; accent colours only for status, priority and small highlights.
+- Motion shows state or gives feedback. It never carries information on its own, and it switches off under reduced motion.
+- Empty and loading states have their own design (drawing or shimmer), never a bare "Loading…".

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { api, Category, formatTime, QueuePage, STATUSES } from "../api";
-import { ErrorNote, StatusBadge } from "../components";
+import { api, Category, formatTime, QueuePage, STATUSES, timeAgo } from "../api";
+import { EmptyState, ErrorNote, PriorityBadge, StatusBadge, useCategoryLabel } from "../components";
 
 export default function StaffQueue() {
   const [data, setData] = useState<QueuePage | null>(null);
@@ -11,6 +11,7 @@ export default function StaffQueue() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [page, setPage] = useState(1);
   const [message, setMessage] = useState("");
+  const categoryLabel = useCategoryLabel();
 
   const load = useCallback(() => {
     const p = new URLSearchParams({ page: String(page), pageSize: "25", sort: "submittedAt" });
@@ -42,7 +43,7 @@ export default function StaffQueue() {
       <h1>Reports to triage</h1>
       <ErrorNote error={error} />
       <div role="status" className="hint">{message}</div>
-      <div className="row" style={{ marginBottom: "var(--space-4)" }}>
+      <div className="filters">
         <div className="field">
           <label htmlFor="f-status">Status</label>
           <select id="f-status" value={status} onChange={(e) => { setStatus(e.target.value); setPage(1); }}>
@@ -60,7 +61,7 @@ export default function StaffQueue() {
       </div>
 
       {data && data.items.length === 0 ? (
-        <p className="empty">No reports match. New reports will appear here.</p>
+        <EmptyState title="No reports match" text="Try a different filter. New reports will appear here as citizens send them." />
       ) : (
         <div className="table-wrap">
           <table>
@@ -72,10 +73,10 @@ export default function StaffQueue() {
               {data?.items.map((r) => (
                 <tr key={r.trackingId}>
                   <td><Link to={`/staff/reports/${r.trackingId}`}>{r.trackingId}</Link></td>
-                  <td>{r.category}</td>
+                  <td>{categoryLabel(r.category)}</td>
                   <td><StatusBadge status={r.status} disputed={r.disputed} /></td>
-                  <td>{r.priority}</td>
-                  <td>{formatTime(r.submittedAt)}</td>
+                  <td><PriorityBadge priority={r.priority} /></td>
+                  <td title={formatTime(r.submittedAt)}>{timeAgo(r.submittedAt)}</td>
                   <td>
                     {r.status === "Submitted" && (
                       <button className="small" onClick={() => acknowledge(r.trackingId)} aria-label={`Acknowledge report ${r.trackingId}`}>Acknowledge</button>

@@ -1,6 +1,7 @@
 import { ReactNode, useEffect, useState } from "react";
 import { BrowserRouter, Link, Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import { api, ApiError, getToken, setToken } from "./api";
+import { Logo } from "./components";
 import StaffDetail from "./pages/StaffDetail";
 import StaffQueue from "./pages/StaffQueue";
 import StaffSignIn from "./pages/StaffSignIn";
@@ -20,7 +21,7 @@ function Shell({ children }: { children: ReactNode }) {
       <a className="skip" href="#main">Skip to content</a>
       <header className="top">
         <div className="top-inner">
-          <Link className="brand" to="/">Civic Issue Tracker</Link>
+          <Link className="brand" to="/"><Logo /><span>Civic Issue Tracker</span></Link>
           <nav aria-label="Main">
             <Link to="/">Report a problem</Link>
             <Link to="/track">Check a report</Link>
@@ -36,6 +37,23 @@ function Shell({ children }: { children: ReactNode }) {
         </div>
       </header>
       <div id="main" tabIndex={-1}>{children}</div>
+      <footer className="foot">
+        <div className="foot-inner">
+          <div className="foot-brand">
+            <span className="foot-name"><Logo size={22} /><strong>Civic Issue Tracker</strong></span>
+            <span className="hint">A pilot service for reporting local problems in Dhaka.</span>
+          </div>
+          <nav aria-label="Footer">
+            <Link to="/">Report a problem</Link>
+            <Link to="/track">Check a report</Link>
+            <Link to="/staff">Staff sign in</Link>
+          </nav>
+          <p className="foot-note">
+            Maps and place search are provided by OpenStreetMap. Using them shares your IP address, the area you are viewing and
+            what you type in the search box with OpenStreetMap. We do not record what you search for.
+          </p>
+        </div>
+      </footer>
     </>
   );
 }

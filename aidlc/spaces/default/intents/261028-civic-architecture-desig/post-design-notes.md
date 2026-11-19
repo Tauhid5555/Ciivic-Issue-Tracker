@@ -15,6 +15,8 @@ NFR Requirements was finished for U1 only. NFR Design and Infrastructure Design 
 ## Changes after the design
 
 - Citizen screens got a looping phone animation beside the report form, a progress tracker on the report page, and a wider colour palette. These were not in the requirements; they are presentation only. The colours are in `wds-output/D-Design-System/02-tokens.md` section 1.2b.
+- Later UI work (Nov 2026): category tiles, photo drop area, a map with place search, a footer, a "what happens next" strip, a logo, a new typeface (self-hosted), Dhaka-time dates and category labels, and staff screen polish. The design documents in `wds-output/D-Design-System/` record each one and where it differs from the design (`03-components.md` section 18; `_progress/00-design-log.md`).
+- The design uses the product name *ReportIt* with a `[Your City]` placeholder; the built slice uses the working title *Civic Issue Tracker* and names Dhaka. This is not decided; it is recorded as a difference.
 
 ## Accepted risks for the pilot (decided by the person, Nov 2026)
 

@@ -1,7 +1,8 @@
 import { FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { api, setToken } from "../api";
-import { ErrorNote } from "../components";
+import { Link } from "react-router-dom";
+import { ErrorNote, Logo } from "../components";
 
 export default function StaffSignIn() {
   const nav = useNavigate();
@@ -31,8 +32,12 @@ export default function StaffSignIn() {
   }
 
   return (
-    <main>
-      <h1>Staff sign in</h1>
+    <main className="auth">
+      <div className="auth-head">
+        <Logo size={48} />
+        <h1>Staff sign in</h1>
+        <p className="hint">For council staff only. If you are reporting a problem, you do not need to sign in.</p>
+      </div>
       <ErrorNote error={error} />
       <form className="card" onSubmit={step}>
         {!challenge ? (
@@ -57,6 +62,7 @@ export default function StaffSignIn() {
           </>
         )}
       </form>
+      <p className="auth-foot"><Link to="/">Report a problem instead</Link></p>
     </main>
   );
 }

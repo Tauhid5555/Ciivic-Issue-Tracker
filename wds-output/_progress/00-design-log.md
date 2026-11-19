@@ -1,7 +1,7 @@
 ---
 project: Civic-Issue-Tracker
 created: 2026-09-06
-updated: 2026-09-06
+updated: 2026-11-20
 ---
 
 # Design Log — Civic Issue Reporter & Tracker
@@ -104,3 +104,13 @@ updated: 2026-09-06
   - **Favicon updated:** pin+check SVG in all 23 pages' `<link rel="icon">`. Single source of truth for browser tab icon.
   - **File restored:** `styles/base.css` was accidentally truncated by an over-eager Write call (dropped from 369 → 61 lines mid-task). Restored in full: reset, skip-link, page wrapper, container classes, typography utilities, stack/grid primitives, map+pin, responsive media queries (md/lg/xl/2xl), citizen lg+ enrichments, logo system (now background-image), top-nav, mobile-header, rail, shell-citizen, site-footer, top-bar. 384 lines final.
   - **Verification:** zero remaining shield paths anywhere (`M12 2L3 6`); all logo `<a>` tags balanced; HTML structure clean across all 23 pages; favicon updated.
+
+- **2026-11-20** — **Thin slice built; design adjusted as built.** The design was implemented directly as a working slice (`backend/`, `frontend/`), after the AI-DLC design workflow was closed early. Changes made to the design while building, all recorded in `D-Design-System/`:
+  - **Colour:** added an accent palette (teal, sky, sun, coral) and two gradients (`02-tokens.md` §1.2b). A violet accent was tried and removed.
+  - **Typeface:** the original "system-ui only" decision is replaced by Plus Jakarta Sans plus Noto Sans Bengali, self-hosted (`02-tokens.md` §2.1). Open point: whether v1 needs Bangla.
+  - **Components:** `03-components.md` §18 maps each specified component to what was built and lists the differences (photo drop area, category tiles, location picker with a Dhaka-only limit and place search, empty state) and the components the spec did not have (progress tracker, landing showcase, "what happens next", priority pill, map link, footer).
+  - **Patterns:** `04-patterns.md` §26 records the landing composition as built.
+  - **Logo:** a pin + check logo was drawn again as a React component. The design log already recorded this concept (Sep 2026, kept in the prototype's CSS); the two match in idea.
+  - **Not carried over from the design:** product name ReportIt, the Citizen Portal left rail, bulk acknowledge, filter chips and drawers, personal history.
+  - **Revision, same day:** the "What happens after you send a report" cards were first built as a normal block under the form. The person asked for it to stay fixed while scrolling and rest above the footer, and to keep the original wording. Decision: a sticky bar from 1024px up (an ordinary block below), full wording kept, about 150px tall. Documented here and in `04-patterns.md` section 26 before the code was changed. A shortened-text version was tried for a few minutes and reverted at the person's request.
+  - **Accepted risks** from the map work are in the root `README.md` ("Accepted risks for the pilot"), not here.

@@ -1,7 +1,7 @@
 import { FormEvent, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { api, ApiError, formatTime, TrackingView } from "../api";
-import { ErrorNote, ProgressTracker, StatusBadge } from "../components";
+import { ErrorNote, MapLink, ProgressTracker, StatusBadge, useCategoryLabel } from "../components";
 
 export function TrackLookup() {
   const nav = useNavigate();
@@ -29,6 +29,7 @@ export default function Track() {
   const [view, setView] = useState<TrackingView | null>(null);
   const [error, setError] = useState<unknown>(null);
   const [disputeMsg, setDisputeMsg] = useState("");
+  const categoryLabel = useCategoryLabel();
 
   const load = () => {
     setError(null);
@@ -75,9 +76,9 @@ export default function Track() {
           </p>
           <ProgressTracker status={view.status} />
           <div className="card">
-            <p><strong>{view.category}</strong> · reported {formatTime(view.submittedAt)}</p>
+            <p><strong>{categoryLabel(view.category)}</strong> · reported {formatTime(view.submittedAt)}</p>
             <p>{view.description}</p>
-            <p className="hint">Location: {view.location.latitude.toFixed(5)}, {view.location.longitude.toFixed(5)}</p>
+            <p className="hint"><MapLink lat={view.location.latitude} lng={view.location.longitude} /> · {view.location.latitude.toFixed(5)}, {view.location.longitude.toFixed(5)}</p>
             {view.resolutionNote && (
               <div className="alert ok"><strong>How it was resolved:</strong> {view.resolutionNote}</div>
             )}

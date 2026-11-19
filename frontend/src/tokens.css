@@ -28,10 +28,8 @@
   --accent-sun-soft:    #FDF1D6;
   --accent-coral:       #E4694F;
   --accent-coral-soft:  #FCE6E0;
-  --accent-violet:      #6E5BC4;
-  --accent-violet-soft: #ECE8F9;
   --gradient-brand:     linear-gradient(135deg, #2F6F4E 0%, #1F7A8C 100%);
-  --gradient-hero:      linear-gradient(135deg, #2F6F4E, #1F7A8C 45%, #3B82C4 75%, #6E5BC4);
+  --gradient-hero:      linear-gradient(135deg, #2F6F4E, #1F7A8C 55%, #3B82C4);
 
   /* ---------- 1.3 Status palette ---------- */
   --status-submitted:        #7A6F5C;
@@ -56,7 +54,7 @@
   --color-success-bg:   #E6F1EA;
 
   /* ---------- 2. Typography ---------- */
-  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-sans: "Plus Jakarta Sans Variable", "Noto Sans Bengali Variable", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-mono: ui-monospace, "SF Mono", Menlo, monospace;
 
   --text-display: 2rem;

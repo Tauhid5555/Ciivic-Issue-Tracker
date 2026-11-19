@@ -38,17 +38,16 @@ Foundational values for color, typography, spacing, radius, elevation, and motio
 
 ### 1.2b Accent palette (added Nov 2026 for the modern look)
 
-Decorative only. Status colours in 1.3 keep their meaning and are not replaced by these. Dark text on the soft tints and white text on the gradients were chosen for AA contrast; they have not been checked with a contrast tool.
+Decorative only. Status colours in 1.3 keep their meaning and are not replaced by these. Violet was tried and removed (Nov 2026): it read as a second brand beside the green. Rule: green carries actions; accents are for status, priority and small highlights. Dark text on the soft tints and white text on the gradients were chosen for AA contrast; they have not been checked with a contrast tool.
 
 | Token | Value | Use |
 |-------|-------|-----|
 | `--accent-teal` / `-soft` | `#1F7A8C` / `#DDF0F4` | Links, focus ring, gradient end |
-| `--accent-sky` / `-soft` | `#3B82C4` / `#E1EEF9` | Tracking ID box, page wash, tracker step 1 |
-| `--accent-sun` / `-soft` | `#F2B84B` / `#FDF1D6` | Warning tint, page wash, tracker step 3 |
-| `--accent-coral` / `-soft` | `#E4694F` / `#FCE6E0` | Reserved, not yet used |
-| `--accent-violet` / `-soft` | `#6E5BC4` / `#ECE8F9` | Gradient end, reserved |
+| `--accent-sky` / `-soft` | `#3B82C4` / `#E1EEF9` | Tracking ID box, page wash, tracker step 1, Medium priority pill, empty-state drawing |
+| `--accent-sun` / `-soft` | `#F2B84B` / `#FDF1D6` | Warning tint, page wash, tracker step 3, High priority pill |
+| `--accent-coral` / `-soft` | `#E4694F` / `#FCE6E0` | Urgent priority pill |
 | `--gradient-brand` | `135deg, #2F6F4E to #1F7A8C` | Primary buttons, brand name |
-| `--gradient-hero` | green, teal, sky, violet | Header stripe, card top edge, headline, tracker line |
+| `--gradient-hero` | green, teal, sky (`135deg, #2F6F4E, #1F7A8C 55%, #3B82C4`) | Header stripe, footer stripe, card top edge, headline, tracker line |
 
 ### 1.3 Status colors (status is hero — these carry meaning everywhere)
 
@@ -83,10 +82,12 @@ Decorative only. Status colours in 1.3 keep their meaning and are not replaced b
 
 | Token | Value | Use |
 |-------|-------|-----|
-| `--font-sans` | `system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif` | All UI — system stack for speed & accessibility |
+| `--font-sans` | `"Plus Jakarta Sans Variable", "Noto Sans Bengali Variable", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif` | All UI. Plus Jakarta Sans for Latin text, Noto Sans Bengali for Bangla, system fonts as the fallback |
 | `--font-mono` | `ui-monospace, "SF Mono", Menlo, monospace` | Tracking ID display |
 
-> **Decision:** system-ui, not Inter / Geist. Zero network cost, native-feeling, AA-friendly. The brand personality comes from copy, layout, and color — not font choice.
+> **Decision (changed Nov 2026):** the original decision was system-ui only (zero network cost, native feel). It is replaced: the system font made every page look generic, and the service is for Dhaka, where Bangla text needs a proper Bengali font. The fonts are **self-hosted** from the npm packages `@fontsource-variable/plus-jakarta-sans` and `@fontsource-variable/noto-sans-bengali`, so the browser makes no request to a font provider (no third party sees the visitor's IP address). The Bengali font is split by character range, so it is downloaded only when a page contains Bengali text. Cost: about 50 kB of Latin font files on every first visit. The system stack stays in `--font-sans` as the fallback while the files load.
+>
+> **Open point:** the service has no Bangla text yet. Whether v1 must be available in Bangla is not settled in the requirements.
 
 ### 2.2 Type scale (rem-based, mobile-first)
 

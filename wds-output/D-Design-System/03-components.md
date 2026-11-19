@@ -634,3 +634,42 @@ The Queue table (Page 02). Used wherever tabular data needs to be dense, sortabl
 - [ ] Accessibility notes (ARIA, focus, contrast)
 - [ ] At least one usage example
 - [ ] Cross-referenced from at least one page spec
+
+---
+
+## 18. As built in the thin slice (Nov 2026)
+
+How the specified components were actually built in `frontend/src/`. Where the build differs from the spec above, the difference is listed so the spec and the code do not drift apart silently. Names in the code are plain React names, not the `CIV…` names used in this document.
+
+| Spec | Built as | Differences from the spec |
+|------|----------|---------------------------|
+| 2.4 `<CIVFileInput variant="photo-dropzone">` | `PhotoPicker.tsx` | Drag-over, hover, filled state with a 96px preview, file name and size are built. **Not built:** the *Remove* link (choose a different photo instead), the red error border, a fixed 120px height. Adds a note that location details inside the photo are removed on save. HEIC photos show the file name where the browser cannot preview them. |
+| 5.1 `<CIVCategoryCard>` | `CategoryPicker.tsx` | Real radio buttons shown as tiles with a line icon per category (streetlight, pothole, garbage, drainage, noise). The tiles fill the row (`auto-fill`, minimum 7.5rem) and lift on hover. **Not built:** the check mark top-right (the selected tile uses a filled background, a green border and a popping icon). Padding is `--space-4`, not `--space-5`. |
+| 8.1 `<CIVMapPin>` and 8.2 `<CIVLocationPicker>` | `LocationPicker.tsx` | Leaflet map limited to a box around Dhaka, a draggable pin, tap-to-place, keyboard control (Enter places the pin, arrow keys move it), a search box (results as the person types), and the latitude and longitude fields kept in sync as the fallback. Not in the spec: the Dhaka limit, the search. See `README.md`, "Accepted risks for the pilot" (R1 to R4). |
+| 10.1 `<CIVEmptyState>` | `EmptyState` in `components.tsx` | A small drawing, a title and a line of text. **Not built:** the call-to-action button. Used on the staff queue; the invalid Tracking ID page still uses plain text. |
+| 10.2 `<CIVLoadingSkeleton>` | `.skeleton` in `styles.css` | A shimmering block. Used on the tracking page and while the category tiles load. |
+| 3.1 `<CIVStatusPill>` | `StatusBadge` | Same statuses. Adds the Disputed flag. |
+| 7.1 `<CIVTimeline>` | `ol.timeline` | Plain list. Backward moves are not yet labelled "Reopened". |
+
+**Built but not in the spec above**
+
+| Component | Where | What it is |
+|-----------|-------|------------|
+| `Logo` | `components.tsx` | Pin with a check mark, in the brand gradient. Same idea as the pin + check logo recorded in the design log (Sep 2026), drawn again as a React component. |
+| `ProgressTracker` | `components.tsx` | Four steps (Submitted, Acknowledged, In Progress, Resolved) with a line that fills when the page opens. Each step has its own accent colour. Closed-Duplicate shows only the badge. |
+| `HeroShowcase` | `HeroShowcase.tsx` | Looping phone animation beside the report form (photo, pin, Tracking ID, progress). Built with the `motion` library. Decorative: hidden from screen readers, paused when the tab is hidden, one still frame under reduced motion. |
+| `NextSteps` | `components.tsx` | "What happens after you send a report": a bar of three steps (we receive it, staff look at it, you can follow it) with their full wording. Sticky at the bottom of the window from 1024px up, resting above the footer; an ordinary block below 1024px. About 150px tall when sticky. Wording is in `04-patterns.md` section 26. |
+| `PriorityBadge` | `components.tsx` | Priority pill: grey Low, blue Medium, amber High, coral Urgent. |
+| `MapLink` | `components.tsx` | "View on map" link to OpenStreetMap, shown beside coordinates. It leaves the site (risk R1). |
+| `useCategoryLabel` | `components.tsx` | Turns a category code into its label. |
+| Footer | `App.tsx` | Brand, three links and the map-provider privacy note. Not in the spec; the prototype footer had Privacy, Accessibility and Contact links and a phone number, which the thin slice does not have. |
+
+**Formatting rules built into `api.ts`**
+- Dates are shown in Dhaka time, day first, without seconds: `19 Nov 2026, 10:03 PM`.
+- The staff queue shows relative time (`2 h ago`); hovering shows the full date.
+
+**Differences from the design as a whole**
+- **Name:** the design (and its prototype) uses the product name *ReportIt* with a `[Your City]` placeholder. The thin slice uses the working title *Civic Issue Tracker* and names Dhaka.
+- **Navigation:** the design has a left rail on desktop for the Citizen Portal. The thin slice uses a top bar and a footer.
+- **One app:** the citizen and staff screens are one app here; the design calls for two surfaces.
+- **Not built:** bulk acknowledge, filter chips and drawer, report detail drawer and modals, personal history.

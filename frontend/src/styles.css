@@ -236,3 +236,107 @@ ol.timeline li::before { background: var(--accent-teal); }
 .picker-search input { flex: 1; }
 .picker-results { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-1); animation: rise var(--motion-normal) both; }
 .picker-results button { width: 100%; justify-content: flex-start; text-align: left; font-weight: var(--weight-regular); font-size: var(--text-body-sm); min-height: 40px; padding: var(--space-2) var(--space-3); }
+
+/* Logo in the header */
+.brand { display: inline-flex; align-items: center; gap: var(--space-2); color: inherit; background: none; -webkit-background-clip: initial; background-clip: initial; }
+.brand span { background: var(--gradient-brand); -webkit-background-clip: text; background-clip: text; color: transparent; font-size: 1.0625rem; letter-spacing: -.01em; }
+.brand .logo { flex: none; transition: transform var(--motion-normal) var(--motion-spring); }
+.brand:hover .logo { transform: translateY(-2px) rotate(-6deg); }
+.logo-tick { stroke-dasharray: 30; stroke-dashoffset: 30; animation: draw 600ms ease-out 300ms forwards; }
+@media (prefers-reduced-motion: reduce) { .logo-tick { stroke-dashoffset: 0; } }
+
+/* ======================= Review fixes ======================= */
+/* Browser autofill must not turn fields blue. */
+input:-webkit-autofill, input:-webkit-autofill:focus { -webkit-box-shadow: 0 0 0 1000px var(--color-surface) inset; -webkit-text-fill-color: var(--color-ink); transition: background-color 9999s; }
+legend { padding: 0; }
+
+/* Priority pills */
+.p-low { background: var(--status-duplicate-bg); color: var(--status-duplicate); }
+.p-medium { background: var(--accent-sky-soft); color: #1d4f7c; }
+.p-high { background: var(--accent-sun-soft); color: #7a520f; }
+.p-urgent { background: var(--accent-coral-soft); color: #9a3220; }
+
+.maplink { display: inline-flex; align-items: center; gap: 4px; font-weight: var(--weight-medium); }
+
+/* Photo drop area */
+.drop { position: relative; border: 2px dashed var(--color-ink-subtle); border-radius: var(--radius-lg); background: var(--color-surface-muted); transition: border-color var(--motion-fast), background var(--motion-fast); }
+.drop:hover, .drop.over { border-color: var(--accent-teal); background: var(--accent-teal-soft); }
+.drop:focus-within { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+.drop.has { border-style: solid; border-color: var(--color-border); background: var(--color-surface); }
+.drop-body { display: flex; align-items: center; gap: var(--space-4); padding: var(--space-4); cursor: pointer; font-weight: var(--weight-regular); }
+.drop-icon { flex: none; color: var(--accent-teal); }
+.drop-preview { flex: none; width: 96px; height: 96px; object-fit: cover; border-radius: var(--radius-md); border: 1px solid var(--color-border); animation: pop var(--motion-slow) var(--motion-spring) both; }
+.drop-text { display: grid; gap: 2px; min-width: 0; }
+.drop-text strong { overflow-wrap: anywhere; font-weight: var(--weight-semibold); }
+
+/* Location block: search and "use my location" share one row; coordinates are smaller */
+.picker-search { flex-wrap: wrap; }
+.picker-search input { flex: 1 1 14rem; }
+.picker-search button { flex: none; }
+.coords { gap: var(--space-3); }
+.coords .field { margin-bottom: 0; }
+.coords label { font-size: var(--text-caption); color: var(--color-ink-muted); }
+.coords input { min-height: 38px; padding: var(--space-2) var(--space-3); font-size: var(--text-body-sm); }
+
+/* Hero: badges stay whole (in front of the phone) and the headline lines up with the form title */
+.float-badge { z-index: 3; }
+.fb1 { left: 0; } .fb2 { right: 0; } .fb3 { left: 4%; }
+@media (min-width: 64rem) { .hero { padding-top: var(--space-6); } .hero-title { margin-top: 0; } }
+
+/* Staff sign in: narrow, centred */
+main.auth { max-width: 26rem; }
+.auth-head { display: grid; justify-items: center; text-align: center; gap: var(--space-1); margin-bottom: var(--space-4); }
+.auth-head h1 { margin: var(--space-2) 0 0; }
+.auth-head p { margin: 0; }
+.auth-foot { text-align: center; }
+
+/* Staff queue */
+.filters { display: flex; flex-wrap: wrap; gap: var(--space-4); margin-bottom: var(--space-4); }
+.filters .field { flex: 0 1 14rem; margin-bottom: 0; }
+tbody tr { transition: background var(--motion-fast); }
+tbody tr:hover { background: var(--color-brand-soft); }
+
+/* ======================= Typeface, tiles, next steps, footer ======================= */
+body { -webkit-font-smoothing: antialiased; }
+h1, h2 { letter-spacing: -.015em; }
+#root { min-height: 100vh; display: flex; flex-direction: column; }
+#main { flex: 1; }
+
+/* Category tiles */
+.cats { border: 0; padding: 0; margin: 0 0 var(--space-4); min-width: 0; }
+.cat-grid { display: grid; gap: var(--space-2); grid-template-columns: repeat(auto-fill, minmax(7.5rem, 1fr)); margin-top: var(--space-1); }
+.cat { display: block; font-weight: var(--weight-regular); cursor: pointer; }
+.cat-tile { display: grid; justify-items: center; gap: var(--space-2); padding: var(--space-4) var(--space-2); text-align: center; border: 1.5px solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-surface); color: var(--color-ink-muted); font-size: var(--text-body-sm); font-weight: var(--weight-medium); transition: border-color var(--motion-fast), background var(--motion-fast), color var(--motion-fast), transform var(--motion-fast), box-shadow var(--motion-fast); }
+.cat:hover .cat-tile { border-color: var(--accent-teal); color: var(--color-brand-strong); transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.cat input:checked + .cat-tile { border-color: var(--color-brand); background: var(--color-brand-soft); color: var(--color-brand-strong); box-shadow: 0 0 0 3px var(--accent-teal-soft); }
+.cat input:checked + .cat-tile svg { animation: pop var(--motion-slow) var(--motion-spring) both; }
+.cat input:focus-visible + .cat-tile { outline: 3px solid var(--color-focus); outline-offset: 2px; }
+.cat-skel { height: 84px; }
+
+/* What happens next: a slim bar. Sticky at the bottom of the window on wide screens, resting above the footer. */
+.next { grid-column: 1 / -1; margin: var(--space-6) 0 var(--space-4); padding: var(--space-3) var(--space-4); border-radius: var(--radius-lg); background: rgba(255, 255, 255, .92); backdrop-filter: blur(8px); border: 1px solid var(--color-border); box-shadow: var(--shadow-md); display: grid; gap: var(--space-3); }
+.next h2 { margin: 0; font-size: var(--text-body-sm); line-height: 1.3; }
+.next-grid { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-3); grid-template-columns: 1fr; }
+.next-card { display: flex; align-items: center; gap: var(--space-3); min-width: 0; font-size: var(--text-caption); color: var(--color-ink-muted); line-height: 1.3; }
+.next-copy { display: grid; min-width: 0; }
+.next-card strong { color: var(--color-ink); font-size: var(--text-body-sm); }
+.next-icon { flex: none; display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: var(--gradient-brand); color: #fff; }
+@media (min-width: 64rem) {
+  .next { position: sticky; bottom: var(--space-3); z-index: 4; margin-bottom: 0; gap: var(--space-2); }
+  .next-grid { grid-template-columns: repeat(3, 1fr); gap: var(--space-6); }
+  .next-card { align-items: flex-start; }
+}
+
+/* Empty state */
+.empty-state { display: grid; justify-items: center; gap: var(--space-2); padding: var(--space-12) var(--space-4); text-align: center; background: var(--color-surface); border: 1px dashed var(--color-border); border-radius: var(--radius-lg); }
+.empty-state strong { font-size: var(--text-h3); }
+
+/* Footer */
+.foot { margin-top: var(--space-8); background: var(--color-surface); border-top: 1px solid var(--color-border); }
+.foot::before { content: ""; display: block; height: 3px; background: var(--gradient-hero); }
+.foot-inner { max-width: 72rem; margin: 0 auto; padding: var(--space-6) var(--space-4); display: grid; gap: var(--space-4); }
+.foot-brand { display: grid; gap: var(--space-1); }
+.foot-name { display: inline-flex; align-items: center; gap: var(--space-2); }
+.foot nav { display: flex; flex-wrap: wrap; gap: var(--space-4); }
+.foot-note { margin: 0; color: var(--color-ink-muted); font-size: var(--text-caption); max-width: 52rem; }
+@media (min-width: 52rem) { .foot-inner { grid-template-columns: 1fr auto; } .foot-note { grid-column: 1 / -1; } }
