@@ -19,6 +19,10 @@ SUBMIT_LIMIT = (10, 3600)
 LOOKUP_LIMIT = (60, 60)
 SIGN_IN_LIMIT = (10, 300)
 
+# Service area for the pilot: a box around Dhaka (south, west, north, east). Keep in step with SERVICE_BOUNDS in
+# frontend/src/LocationPicker.tsx. Reports with a position outside it are refused.
+SERVICE_AREA = (23.62, 90.28, 23.95, 90.55)
+
 TRACKING_ID_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"  # no 0/O, 1/I
 TRACKING_ID_LENGTH = 10
 

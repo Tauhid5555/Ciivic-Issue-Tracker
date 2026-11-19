@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { api, ApiError, Category, SubmissionResult } from "../api";
 import { ErrorNote, fieldError } from "../components";
 import HeroShowcase from "../HeroShowcase";
+import LocationPicker, { inServiceArea } from "../LocationPicker";
 
 const MAX_BYTES = 10 * 1024 * 1024;
 
@@ -26,6 +27,10 @@ export default function Submit() {
     setGeoNote("Looking for your location…");
     navigator.geolocation.getCurrentPosition(
       (p) => {
+        if (!inServiceArea({ lat: p.coords.latitude, lng: p.coords.longitude })) {
+          setGeoNote("Your location is outside Dhaka. For now we can only take reports inside the Dhaka area. Tap the map to place the pin.");
+          return;
+        }
         setLat(p.coords.latitude.toFixed(6));
         setLng(p.coords.longitude.toFixed(6));
         setGeoNote("Location found.");
@@ -94,6 +99,7 @@ export default function Submit() {
           <legend className="label">Where is it?</legend>
           <button type="button" className="secondary" onClick={useMyLocation}>Use my current location</button>
           <span className="hint" role="status">{geoNote}</span>
+          <LocationPicker lat={lat} lng={lng} onChange={(a, b) => { setLat(a); setLng(b); }} />
           <div className="row">
             <div className="field">
               <label htmlFor="latitude">Latitude</label>

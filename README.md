@@ -26,7 +26,7 @@ Open http://localhost:5173. Citizens use `/`; staff use `/staff`.
 
 ## Test
 
-    cd backend && .venv\Scripts\python -m pytest -q       # 42 tests
+    cd backend && .venv\Scripts\python -m pytest -q       # 49 tests
     cd frontend && npm run build                          # typecheck and build
 
 ## What is in this slice
@@ -37,6 +37,8 @@ Requirements FR1 to FR3 (submit, Tracking ID, public tracking), FR7 and FR9 (que
 
 - **Landing showcase:** a looping phone animation beside the report form (photo, map pin, Tracking ID, progress to resolved), built with the `motion` library in `frontend/src/HeroShowcase.tsx`. On small screens it shrinks above the form. It is hidden from screen readers, pauses when the tab is hidden, and shows one still frame when the device asks for reduced motion.
 - **Progress tracker:** the report page shows four steps (Submitted, Acknowledged, In Progress, Resolved) that fill in when the page opens. Closed-Duplicate reports show only the status badge.
+- **Place search:** a search box above the map finds streets and areas inside Dhaka (OpenStreetMap's Nominatim service, `VITE_GEOCODER_URL` to change it). It searches when the person presses Enter or Search, never on each keystroke, shows up to five results, and drops results outside the Dhaka area. Typed search text is sent to the search provider: see risk R1 under "Accepted risks for the pilot". Search text is never logged by us.
+- **Map pin:** the report form has a map (Leaflet, `frontend/src/LocationPicker.tsx`). Tap the map or drag the pin; with the keyboard, press Enter to place the pin at the centre and use the arrow keys to move it. The latitude and longitude fields stay and stay in sync, so typing a position, or "Use my current location", still works, and the form works if the map does not load.
 - **Other motion:** page entrance, loading placeholders, and a drawn check mark on the confirmation page.
 - **Colour:** green stays the brand colour; accent colours (teal, sky, sun, coral, violet) and gradients are in `frontend/src/tokens.css` and documented in `wds-output/D-Design-System/02-tokens.md` section 1.2b. Status colours keep their meaning and are unchanged.
 - The animation is decorative. The illustrations are simple drawings in code, not final artwork. The page's JavaScript grew by about 135 kB because of `motion`; lazy loading it would cut that.
@@ -45,9 +47,23 @@ Requirements FR1 to FR3 (submit, Tracking ID, public tracking), FR7 and FR9 (que
 
 Every uploaded photo is decoded and saved again, so nothing from its embedded metadata survives: no GPS position, camera details, timestamps, thumbnails, XMP or IPTC. The rotation a phone records in the metadata is applied to the picture first. HEIC photos are stored as JPEG. Files over 50 million pixels are refused. Only the cleaned copy is stored; the original upload is never written to disk.
 
+## Accepted risks for the pilot
+
+These are known weaknesses the team has decided to live with for the pilot release only. Each one must be fixed or formally accepted again before real citizens' data is at stake.
+
+| # | Risk | Why it matters | Fix before launch |
+|---|------|----------------|-------------------|
+| R1 | **Map and search privacy.** The map tiles and the street search are served by OpenStreetMap's public services. Every map view sends the visitor's IP address and the map area they are looking at to OpenStreetMap. Every search sends the text the person types, plus their IP address. | A citizen reporting a problem near their home reveals their approximate location and their search text to a third party outside our control. There is no agreement with that third party about what it keeps. | Use a hosted tile and search provider under a data-processing agreement (or self-host tiles), route search through our own backend so the browser's IP is not exposed, name the provider in the privacy notice, and get the privacy owner's sign-off. |
+| R2 | **Public-service terms.** OpenStreetMap's tile and Nominatim policies do not allow heavy or production use and may block traffic without notice. | The map or search could stop working under load or if the service blocks us. | Move to a hosted provider with a service agreement. |
+| R3 | **Exact public pin.** The tracking page shows the exact position of every report (FR3.3), and the map makes exact positions easy to place. | An exact position can identify a home or a person (requirements OQ-A2). | Decide whether to round or offset the public pin. |
+| R4 | **Dhaka-only limit.** Closed: the backend now refuses a report whose position is outside the Dhaka box (`SERVICE_AREA` in `backend/app/config.py`), with error code `outside_service_area`, before any photo is stored. The box is a rough rectangle and must be kept in step with the one in the frontend. | A direct request can no longer file a report outside the service area. | None. Replace the box with the real city boundaries if they are wanted. |
+
+R1 and R2 come from the choice to use free public map services for the pilot; R3 comes from the approved requirements. R4 was a gap in the build and is now closed.
+
 ## Known gaps (not yet built or not yet production-grade)
 
-- **Location pin:** latitude and longitude are typed or taken from the browser. There is no draggable map pin yet (FR1.3).
+- **Dhaka only (screen side):** the map is limited to a box around Dhaka (`SERVICE_BOUNDS` in `frontend/src/LocationPicker.tsx`, roughly 23.62 to 23.95 N and 90.28 to 90.55 E), and the form refuses positions outside it. The backend enforces the same box (`SERVICE_AREA`).
+- **Map tiles:** the location map (draggable pin, FR1.3) uses OpenStreetMap's public tiles, which is fine for development only. Before real citizens use it, set `VITE_TILE_URL` and `VITE_TILE_ATTRIBUTION` to a hosted tile provider, and mention the map provider in the privacy notice (tile requests reveal the visitor's IP address and map area). See "Accepted risks for the pilot" (R1, R2) for the privacy and terms-of-use consequences.
 - **Malware scan:** the scan is a hook that accepts everything (NFR15). Photos are decoded and re-saved, which rejects files that are not real pictures, but that is not a malware scan. Do not use with real citizen photos until a scanner is connected.
 - **Magic-link history (FR4):** not built. Citizens use the Tracking ID only.
 - **Email:** notifications are queued in the same transaction as the change and marked sent, but nothing is actually emailed; the address is never logged.

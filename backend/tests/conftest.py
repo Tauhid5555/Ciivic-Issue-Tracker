@@ -59,7 +59,7 @@ def sign_in(client, secret, email="staff@example.org", password=PASSWORD):
 
 
 def submit(client, key="k" * 16, email=None, photo=JPEG, content_type="image/jpeg", **over):
-    data = {"category": "pothole", "description": "Deep hole outside the school", "latitude": "51.5", "longitude": "-0.12"}
+    data = {"category": "pothole", "description": "Deep hole outside the school", "latitude": "23.81", "longitude": "90.41"}
     if email:
         data["email"] = email
     data.update(over)

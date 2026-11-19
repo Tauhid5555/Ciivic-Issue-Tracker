@@ -219,3 +219,20 @@ a { color: var(--accent-teal); }
 .tid { background: var(--accent-sky-soft); color: #1d4f7c; }
 ol.timeline { border-left-color: var(--accent-sky-soft); }
 ol.timeline li::before { background: var(--accent-teal); }
+
+/* ======================= Map pin ======================= */
+.picker { display: grid; gap: var(--space-2); }
+.picker-map { height: 300px; border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--color-border); box-shadow: var(--shadow-sm); }
+.picker-map:focus-within { border-color: var(--accent-teal); box-shadow: 0 0 0 3px var(--accent-teal-soft); }
+.picker-map .leaflet-container { font: inherit; background: var(--accent-sky-soft); }
+.picker-map .leaflet-container:focus-visible { outline: none; }
+.pin { background: none; border: 0; cursor: grab; }
+.pin:active { cursor: grabbing; }
+.pin svg { display: block; filter: drop-shadow(0 4px 4px rgba(27,31,35,.3)); transform-origin: 50% 100%; animation: pin-drop 520ms var(--motion-spring) both; }
+@keyframes pin-drop { from { transform: translateY(-34px) scale(.8); opacity: 0; } to { transform: none; opacity: 1; } }
+
+/* Map search */
+.picker-search { display: flex; gap: var(--space-2); }
+.picker-search input { flex: 1; }
+.picker-results { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-1); animation: rise var(--motion-normal) both; }
+.picker-results button { width: 100%; justify-content: flex-start; text-align: left; font-weight: var(--weight-regular); font-size: var(--text-body-sm); min-height: 40px; padding: var(--space-2) var(--space-3); }

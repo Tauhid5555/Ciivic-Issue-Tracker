@@ -61,6 +61,14 @@ async def submit_report(
         raise ApiError(422, "invalid_email", "That email address does not look right.", [{"field": "email", "message": "Invalid email"}])
     if not description.strip():
         raise ApiError(422, "description_required", "Please describe the problem.", [{"field": "description", "message": "Required"}])
+    south, west, north, east = config.SERVICE_AREA
+    if not (south <= latitude <= north and west <= longitude <= east):
+        raise ApiError(
+            422,
+            "outside_service_area",
+            "For now we can only take reports inside the Dhaka area.",
+            [{"field": "latitude", "message": "Outside the Dhaka area"}, {"field": "longitude", "message": "Outside the Dhaka area"}],
+        )
 
     # A repeated key replays the original result and stores nothing new.
     from sqlalchemy import select

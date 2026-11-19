@@ -16,6 +16,15 @@ NFR Requirements was finished for U1 only. NFR Design and Infrastructure Design 
 
 - Citizen screens got a looping phone animation beside the report form, a progress tracker on the report page, and a wider colour palette. These were not in the requirements; they are presentation only. The colours are in `wds-output/D-Design-System/02-tokens.md` section 1.2b.
 
+## Accepted risks for the pilot (decided by the person, Nov 2026)
+
+The full table is in `README.md` under "Accepted risks for the pilot". In short:
+
+- **Map and search privacy (R1):** the location map and the street search use OpenStreetMap's public services. Each map view sends the visitor's IP address and viewed area, and each search sends the typed text, to OpenStreetMap. The person decided to ignore this for the pilot and asked for it to be documented. It conflicts with the intent of NFR7 (privacy of location) and must be fixed or formally accepted again before launch.
+- **Public-service terms (R2):** the free tile and search services forbid heavy production use.
+- **Exact public pin (R3):** already open as OQ-A2 in the requirements.
+- **Area limit (R4):** closed. The backend refuses positions outside the Dhaka box, with tests.
+
 ## Not built
 
-Magic-link history (FR4), retention purge (FR17), staff invitation screen, category and zone administration, a malware scanner, real email sending, a draggable map pin, two separate screen apps, and AWS infrastructure (unit U7).
+Magic-link history (FR4), retention purge (FR17), staff invitation screen, category and zone administration, a malware scanner, real email sending, two separate screen apps, and AWS infrastructure (unit U7).

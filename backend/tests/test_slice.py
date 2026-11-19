@@ -19,7 +19,7 @@ def test_submit_track_acknowledge_end_to_end(client, staff):
 
     view = client.get(f"/v1/reports/{tid}").json()
     assert view["status"] == "Submitted"
-    assert view["location"] == {"latitude": 51.5, "longitude": -0.12}
+    assert view["location"] == {"latitude": 23.81, "longitude": 90.41}
 
     headers = sign_in(client, staff["secret"])
     queue = client.get("/v1/staff/reports", headers=headers).json()
@@ -104,6 +104,29 @@ def test_bad_fields_are_rejected_with_the_standard_error_shape(client, over):
     r = submit(client, **over)
     assert r.status_code in (422,)
     assert set(r.json()) == {"code", "message", "fieldErrors"}
+
+
+@pytest.mark.parametrize(
+    "lat,lng",
+    [("51.5", "-0.12"), ("23.5", "90.41"), ("24.1", "90.41"), ("23.81", "90.1"), ("23.81", "90.7"), ("0", "0")],
+    ids=["london", "south", "north", "west", "east", "null-island"],
+)
+def test_position_outside_dhaka_is_refused_and_stores_nothing(client, lat, lng):
+    from app import config
+
+    before = len(list(config.PHOTO_DIR.glob("*.bin"))) if config.PHOTO_DIR.exists() else 0
+    r = submit(client, latitude=lat, longitude=lng)
+    assert r.status_code == 422 and r.json()["code"] == "outside_service_area"
+    assert {f["field"] for f in r.json()["fieldErrors"]} == {"latitude", "longitude"}
+    with SessionLocal() as db:
+        assert db.scalars(select(Report)).all() == []
+    after = len(list(config.PHOTO_DIR.glob("*.bin"))) if config.PHOTO_DIR.exists() else 0
+    assert after == before  # the photo was not stored either
+
+
+def test_positions_on_the_edge_of_the_area_are_accepted(client):
+    assert submit(client, key="e" * 16, latitude="23.62", longitude="90.28").status_code == 201
+    assert submit(client, key="f" * 16, latitude="23.95", longitude="90.55").status_code == 201
 
 
 def test_rate_limit_returns_429(client):
