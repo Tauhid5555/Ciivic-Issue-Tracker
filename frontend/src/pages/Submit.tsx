@@ -2,6 +2,7 @@ import { FormEvent, useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { api, ApiError, Category, SubmissionResult } from "../api";
 import { ErrorNote, fieldError } from "../components";
+import HeroShowcase from "../HeroShowcase";
 
 const MAX_BYTES = 10 * 1024 * 1024;
 
@@ -65,6 +66,8 @@ export default function Submit() {
   if (result) return <Confirmation result={result} />;
 
   return (
+    <div className="landing">
+    <HeroShowcase />
     <main>
       <h1>Report a local problem</h1>
       <p>Tell us what is wrong and where. You do not need an account.</p>
@@ -122,6 +125,7 @@ export default function Submit() {
       </form>
       <p><Link to="/track">Already have a Tracking ID?</Link></p>
     </main>
+    </div>
   );
 }
 
@@ -130,6 +134,10 @@ function Confirmation({ result }: { result: SubmissionResult }) {
   const noEmail = result.emailNotice === "no-email-no-notifications";
   return (
     <main>
+      <svg className="check" viewBox="0 0 52 52" width="64" height="64" aria-hidden="true">
+        <circle className="check-ring" cx="26" cy="26" r="24" fill="none" />
+        <path className="check-tick" d="M14 27l8 8 16-17" fill="none" />
+      </svg>
       <h1>Report received</h1>
       <p>{result.confirmationText}</p>
       <p className="tid" aria-label={`Your Tracking ID is ${result.trackingId.split("").join(" ")}`}>{result.trackingId}</p>

@@ -19,6 +19,20 @@
   --color-brand-strong:  #1F4F36;
   --color-brand-soft:    #E6F1EA;
 
+  /* ---------- 1.2b Accent palette (added for the modern look; text on these passes AA) ---------- */
+  --accent-teal:        #1F7A8C;
+  --accent-teal-soft:   #DDF0F4;
+  --accent-sky:         #3B82C4;
+  --accent-sky-soft:    #E1EEF9;
+  --accent-sun:         #F2B84B;
+  --accent-sun-soft:    #FDF1D6;
+  --accent-coral:       #E4694F;
+  --accent-coral-soft:  #FCE6E0;
+  --accent-violet:      #6E5BC4;
+  --accent-violet-soft: #ECE8F9;
+  --gradient-brand:     linear-gradient(135deg, #2F6F4E 0%, #1F7A8C 100%);
+  --gradient-hero:      linear-gradient(135deg, #2F6F4E, #1F7A8C 45%, #3B82C4 75%, #6E5BC4);
+
   /* ---------- 1.3 Status palette ---------- */
   --status-submitted:        #7A6F5C;
   --status-submitted-bg:     #F2EFE8;

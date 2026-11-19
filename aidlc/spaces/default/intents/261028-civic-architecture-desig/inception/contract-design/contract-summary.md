@@ -87,7 +87,7 @@ paths:
     get:
       summary: Public tracking view (FR3)
       parameters:
-        - { in: path, name: trackingId, required: true, schema: { type: string, minLength: 8 } }
+        - { in: path, name: trackingId, required: true, schema: { type: string } }  # CC-4: no minLength, so a short ID gets the same 404 as an unknown one (NFR16.1)
       responses:
         "200":
           description: The tracking view
@@ -122,10 +122,17 @@ paths:
         "202": { description: Always the same answer, whether or not the email has reports }
         "429": { $ref: "#/components/responses/Error" }
   /history:
-    get:
-      summary: Reports linked to the email behind a magic link (FR4)
-      parameters:
-        - { in: query, name: token, required: true, schema: { type: string } }
+    post:  # CC-1: the token travels in the body, never in a URL query (NFR16.2). The emailed link carries it after "#".
+      summary: Reports linked to the email behind a magic link (FR4). Not yet built in the thin slice.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [token]
+              properties:
+                token: { type: string }
       responses:
         "200":
           description: Report summaries
@@ -377,6 +384,7 @@ components:
         total: { type: integer }
     StatusChange:
       type: object
+      required: [sequence, toStatus, changedAt, actorType]  # CC-5
       properties:
         sequence: { type: integer }
         fromStatus: { type: string, nullable: true }
@@ -541,6 +549,16 @@ operations:
     output: { active: boolean, displayName }
     errors: [UnknownStaff]
     note: Called on every staff action so a deactivated account stops at once (FR16).
+  - name: resolveSession   # CC-2
+    input: { accessToken }
+    output: { staffId, displayName, active: boolean }
+    errors: [InvalidSession]
+    note: Turns the bearer token on a C2 request into a staff identity and refuses an expired, signed-out or deactivated session on that same call (NFR8.2).
+  - name: markPhotoAttached   # CC-3
+    input: { photoId, trackingId }
+    output: { attached: boolean }
+    errors: [UnknownPhoto]
+    note: Called inside openReport so the 24-hour cleanup can tell attached photos from unattached ones (ADR-005).
   - name: storeAfterPhoto
     input: { bytes, declaredContentType }
     output: { photoId }

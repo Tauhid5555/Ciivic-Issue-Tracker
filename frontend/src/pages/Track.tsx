@@ -1,7 +1,7 @@
 import { FormEvent, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { api, ApiError, formatTime, TrackingView } from "../api";
-import { ErrorNote, StatusBadge } from "../components";
+import { ErrorNote, ProgressTracker, StatusBadge } from "../components";
 
 export function TrackLookup() {
   const nav = useNavigate();
@@ -60,13 +60,20 @@ export default function Track() {
     <main>
       <h1>Your report</h1>
       <ErrorNote error={error} />
-      {!view && !error && <p role="status">Loading…</p>}
+      {!view && !error && (
+        <div role="status" aria-label="Loading your report">
+          <div className="skeleton" style={{ width: "40%", height: 44 }} />
+          <div className="skeleton" style={{ width: "100%", height: 90, marginTop: 16 }} />
+          <div className="skeleton" style={{ width: "100%", height: 140, marginTop: 16 }} />
+        </div>
+      )}
       {view && (
         <>
           <p className="tid">{view.trackingId}</p>
           <p>
             <StatusBadge status={view.status} disputed={view.disputed} />
           </p>
+          <ProgressTracker status={view.status} />
           <div className="card">
             <p><strong>{view.category}</strong> · reported {formatTime(view.submittedAt)}</p>
             <p>{view.description}</p>

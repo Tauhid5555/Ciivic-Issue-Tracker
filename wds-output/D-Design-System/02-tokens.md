@@ -36,6 +36,20 @@ Foundational values for color, typography, spacing, radius, elevation, and motio
 
 > **Why green?** Civic, calm, "we're handling it." Avoids the government-blue cliché. Tests as a primary brand on neutral surfaces without screaming.
 
+### 1.2b Accent palette (added Nov 2026 for the modern look)
+
+Decorative only. Status colours in 1.3 keep their meaning and are not replaced by these. Dark text on the soft tints and white text on the gradients were chosen for AA contrast; they have not been checked with a contrast tool.
+
+| Token | Value | Use |
+|-------|-------|-----|
+| `--accent-teal` / `-soft` | `#1F7A8C` / `#DDF0F4` | Links, focus ring, gradient end |
+| `--accent-sky` / `-soft` | `#3B82C4` / `#E1EEF9` | Tracking ID box, page wash, tracker step 1 |
+| `--accent-sun` / `-soft` | `#F2B84B` / `#FDF1D6` | Warning tint, page wash, tracker step 3 |
+| `--accent-coral` / `-soft` | `#E4694F` / `#FCE6E0` | Reserved, not yet used |
+| `--accent-violet` / `-soft` | `#6E5BC4` / `#ECE8F9` | Gradient end, reserved |
+| `--gradient-brand` | `135deg, #2F6F4E to #1F7A8C` | Primary buttons, brand name |
+| `--gradient-hero` | green, teal, sky, violet | Header stripe, card top edge, headline, tracker line |
+
 ### 1.3 Status colors (status is hero — these carry meaning everywhere)
 
 | Token | Value | Meaning | Use |
