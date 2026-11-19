@@ -24,3 +24,11 @@ aidlc/diagnostics/
 .claude/settings.local.json
 .puku-cli/settings.local.json
 # END AI-DLC:gitignore
+
+# Application (thin slice)
+backend/.venv/
+backend/data/
+backend/**/__pycache__/
+backend/.pytest_cache/
+frontend/node_modules/
+frontend/dist/

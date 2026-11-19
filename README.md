@@ -1,0 +1,48 @@
+# Civic Issue Tracker — thin slice
+
+A citizen reports a problem with a photo and a location, and gets a Tracking ID. Staff sign in with a password and a second factor, see the report in a queue, and acknowledge it. The citizen's tracking page then shows the new status.
+
+Built from the design in `aidlc/spaces/default/intents/261028-civic-architecture-desig/` (requirements, components, units, `contract-summary.md`). Backend: Python 3.12 with FastAPI. Screens: React with TypeScript.
+
+## Run it
+
+Backend (one terminal):
+
+    cd backend
+    python -m venv .venv
+    .venv\Scripts\python -m pip install -r requirements.txt
+    .venv\Scripts\python seed.py you@example.org "Your Name" "a-long-password"
+    .venv\Scripts\python -m uvicorn app.main:app --port 8000
+
+`seed.py` prints a second-factor secret once. Add it to an authenticator app (manual entry, time-based). For quick local testing, `python seed.py --code <secret>` prints the current code.
+
+Screens (another terminal):
+
+    cd frontend
+    npm install
+    npm run dev
+
+Open http://localhost:5173. Citizens use `/`; staff use `/staff`.
+
+## Test
+
+    cd backend && .venv\Scripts\python -m pytest -q       # 31 tests
+    cd frontend && npm run build                          # typecheck and build
+
+## What is in this slice
+
+Requirements FR1 to FR3 (submit, Tracking ID, public tracking), FR7 and FR9 (queue, acknowledge), FR10 to FR13 (priority, status rules, resolution note, dispute), FR16 (staff accounts with a second factor), and the privacy and abuse rules in NFR6, NFR7, NFR15 and NFR16.
+
+## Known gaps (not yet built or not yet production-grade)
+
+- **Location pin:** latitude and longitude are typed or taken from the browser. There is no draggable map pin yet (FR1.3).
+- **Photo metadata:** embedded location data in photos is not stripped yet, and the malware scan is a hook that accepts everything (NFR15). Do not use with real citizen photos until both are done.
+- **Magic-link history (FR4):** not built. Citizens use the Tracking ID only.
+- **Email:** notifications are queued in the same transaction as the change and marked sent, but nothing is actually emailed; the address is never logged.
+- **Retention purge (FR17) and category/zone administration:** not built.
+- **Staff invitations:** accounts are created with `seed.py`; there is no invitation screen.
+- **Rate limits and sessions:** held in the process and the database. A second backend instance needs a shared counter store.
+- **Database:** SQLite locally. PostgreSQL on Amazon RDS is the design target; set `DATABASE_URL` to use it.
+- **One screens app:** the Citizen Portal and the Authority Dashboard are two sections of one app here. The design calls for two separate apps.
+- **Contract changes:** the session check, photo-attached step and the not-rejecting-short-IDs rule from the contract review are built in. The magic-link token change (CC-1) is moot until FR4 exists. `contract-summary.md` has not been edited to match.
+- **Infrastructure:** no AWS definitions yet (unit U7).

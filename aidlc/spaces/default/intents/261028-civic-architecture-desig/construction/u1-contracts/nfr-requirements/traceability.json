@@ -1,0 +1,26 @@
+{
+  "stage": "nfr-requirements",
+  "unit": "u1-contracts",
+  "upstream_ids": [
+    "NFR1", "NFR2", "NFR3", "NFR4", "NFR5", "NFR6", "NFR7", "NFR8",
+    "NFR9", "NFR10", "NFR11", "NFR12", "NFR13", "NFR14", "NFR15", "NFR16"
+  ],
+  "coverage": [
+    { "id": "NFR1", "status": "N/A", "target": "page speed belongs to U4 and U5; U1 has no runtime" },
+    { "id": "NFR2", "status": "N/A", "target": "queue speed belongs to U3 and U6; U1 has no runtime" },
+    { "id": "NFR3", "status": "N/A", "target": "acknowledgement email timing belongs to U2 and U3; U1 only defines the event shape" },
+    { "id": "NFR4", "status": "N/A", "target": "status email timing belongs to U2 and U3; U1 only defines the event shape" },
+    { "id": "NFR5", "status": "OK", "target": "NFR5.1" },
+    { "id": "NFR6", "status": "OK", "target": "NFR6.1" },
+    { "id": "NFR7", "status": "OK", "target": "NFR7.1" },
+    { "id": "NFR8", "status": "OK", "target": "NFR8.1, NFR8.2" },
+    { "id": "NFR9", "status": "N/A", "target": "browser support belongs to U5 and U6; U1 has no screens" },
+    { "id": "NFR10", "status": "N/A", "target": "spreadsheets stay is a scope rule with no contract content" },
+    { "id": "NFR11", "status": "N/A", "target": "accessibility belongs to U5 and U6; U1 has no screens" },
+    { "id": "NFR12", "status": "N/A", "target": "backup and availability belong to U7; U1 has no runtime or data" },
+    { "id": "NFR13", "status": "N/A", "target": "pilot scale belongs to the running units; U1 has no runtime" },
+    { "id": "NFR14", "status": "OK", "target": "NFR14.1, NFR14.2, NFR14.3" },
+    { "id": "NFR15", "status": "OK", "target": "NFR15.1, NFR15.2" },
+    { "id": "NFR16", "status": "OK", "target": "NFR16.1, NFR16.2, NFR16.3" }
+  ]
+}
