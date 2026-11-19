@@ -26,17 +26,21 @@ Open http://localhost:5173. Citizens use `/`; staff use `/staff`.
 
 ## Test
 
-    cd backend && .venv\Scripts\python -m pytest -q       # 31 tests
+    cd backend && .venv\Scripts\python -m pytest -q       # 42 tests
     cd frontend && npm run build                          # typecheck and build
 
 ## What is in this slice
 
 Requirements FR1 to FR3 (submit, Tracking ID, public tracking), FR7 and FR9 (queue, acknowledge), FR10 to FR13 (priority, status rules, resolution note, dispute), FR16 (staff accounts with a second factor), and the privacy and abuse rules in NFR6, NFR7, NFR15 and NFR16.
 
+## Photo privacy
+
+Every uploaded photo is decoded and saved again, so nothing from its embedded metadata survives: no GPS position, camera details, timestamps, thumbnails, XMP or IPTC. The rotation a phone records in the metadata is applied to the picture first. HEIC photos are stored as JPEG. Files over 50 million pixels are refused. Only the cleaned copy is stored; the original upload is never written to disk.
+
 ## Known gaps (not yet built or not yet production-grade)
 
 - **Location pin:** latitude and longitude are typed or taken from the browser. There is no draggable map pin yet (FR1.3).
-- **Photo metadata:** embedded location data in photos is not stripped yet, and the malware scan is a hook that accepts everything (NFR15). Do not use with real citizen photos until both are done.
+- **Malware scan:** the scan is a hook that accepts everything (NFR15). Photos are decoded and re-saved, which rejects files that are not real pictures, but that is not a malware scan. Do not use with real citizen photos until a scanner is connected.
 - **Magic-link history (FR4):** not built. Citizens use the Tracking ID only.
 - **Email:** notifications are queued in the same transaction as the change and marked sent, but nothing is actually emailed; the address is never logged.
 - **Retention purge (FR17) and category/zone administration:** not built.

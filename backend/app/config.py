@@ -8,6 +8,7 @@ DATABASE_URL = os.environ.get("DATABASE_URL", f"sqlite:///{BASE_DIR / 'data' / '
 PHOTO_DIR = Path(os.environ.get("PHOTO_DIR", str(BASE_DIR / "data" / "photos")))
 MAX_PHOTO_BYTES = 10 * 1024 * 1024
 ALLOWED_PHOTO_TYPES = {"image/jpeg", "image/png", "image/heic"}
+MAX_PHOTO_PIXELS = 50_000_000  # guards against decompression bombs (a small file that expands hugely)
 SESSION_MINUTES = int(os.environ.get("SESSION_MINUTES", "480"))
 CHALLENGE_MINUTES = 5
 PUBLIC_BASE_URL = os.environ.get("PUBLIC_BASE_URL", "http://localhost:5173")

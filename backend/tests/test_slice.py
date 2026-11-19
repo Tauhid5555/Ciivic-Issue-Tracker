@@ -80,6 +80,8 @@ def test_wrong_photo_type_creates_no_report(client):
     assert r.status_code == 415 and r.json()["code"] == "unsupported_photo_type"
     r = submit(client, key="b" * 16, photo=b"<html>", content_type="image/jpeg")  # lies about its type
     assert r.status_code == 415
+    r = submit(client, key="c" * 16, photo=b"\xff\xd8\xff\xe0" + b"\x00" * 64)  # right header, not a picture
+    assert r.status_code == 415 and r.json()["code"] == "unsupported_photo_type"
     with SessionLocal() as db:
         assert db.scalars(select(Report)).all() == []
 
@@ -215,7 +217,9 @@ def test_acknowledging_twice_is_refused(client, staff):
 def test_staff_can_see_the_citizen_photo_but_the_public_cannot(client, staff):
     tid, h = _report(client, staff)
     url = client.get(f"/v1/staff/reports/{tid}", headers=h).json()["photoUrl"]
-    assert client.get(url, headers=h).content == JPEG
+    shown = client.get(url, headers=h)
+    assert shown.status_code == 200 and shown.headers["content-type"] == "image/jpeg"
+    assert shown.content[:3] == b"\xff\xd8\xff"  # a real picture, re-saved without metadata
     assert client.get(url).status_code == 401
 
 

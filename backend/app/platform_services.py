@@ -3,11 +3,12 @@
 Slice notes (not yet production):
   * Photos go to a local folder; the production store is private object storage.
   * Malware scanning is a pluggable hook that accepts everything here.
-  * Embedded location metadata (EXIF) is NOT stripped yet; see README "Known gaps".
+  * Every stored photo is re-encoded without metadata (see sanitize_photo).
   * Notification sending logs the notification id and kind only (never the address).
 """
 import hashlib
 import hmac
+import io
 import json
 import logging
 import os
@@ -15,7 +16,9 @@ import secrets
 import uuid
 from datetime import timedelta
 
+import pillow_heif
 import pyotp
+from PIL import Image, ImageOps, UnidentifiedImageError
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
@@ -31,6 +34,7 @@ from .models import (
 )
 
 log = logging.getLogger("notifications")
+pillow_heif.register_heif_opener()  # lets Pillow read HEIC photos
 
 
 # ---------------------------------------------------------------- EvidenceRetention
@@ -49,6 +53,36 @@ def scan_for_malware(_: bytes) -> bool:
     return True
 
 
+def sanitize_photo(data: bytes, declared_type: str) -> tuple[bytes, str]:
+    """Return the photo with every piece of embedded metadata removed (NFR15).
+
+    The image is decoded and written out again, so nothing from the original
+    file's metadata can survive: no GPS position, camera details, timestamps,
+    thumbnails, XMP or IPTC. The rotation a phone records in its metadata is
+    applied to the pixels first, so the picture is not turned on its side.
+    HEIC photos become JPEG, because HEIC cannot be written back without risk.
+    Returns (clean bytes, content type of the clean bytes).
+    """
+    try:
+        with Image.open(io.BytesIO(data)) as img:
+            if img.width * img.height > config.MAX_PHOTO_PIXELS:
+                raise ApiError(413, "photo_too_large", "That photo has too many pixels. Please use a smaller one.")
+            img.load()
+            img = ImageOps.exif_transpose(img)  # apply the recorded rotation, then drop it
+            out = io.BytesIO()
+            if declared_type == "image/png":
+                img.save(out, format="PNG", optimize=True)  # no pnginfo, so no text chunks or EXIF
+                return out.getvalue(), "image/png"
+            if img.mode not in ("RGB", "L"):
+                img = img.convert("RGB")
+            img.save(out, format="JPEG", quality=90, optimize=True)  # no exif, icc or comment passed
+            return out.getvalue(), "image/jpeg"
+    except ApiError:
+        raise
+    except (UnidentifiedImageError, OSError, ValueError, SyntaxError, Image.DecompressionBombError):
+        raise ApiError(415, "unsupported_photo_type", "We could not read that photo. Please try another one.")
+
+
 def store_photo(db: Session, data: bytes, declared_type: str, kind: str = "citizen") -> str:
     if declared_type not in config.ALLOWED_PHOTO_TYPES:
         raise ApiError(415, "unsupported_photo_type", "Please upload a JPEG, PNG or HEIC photo.")
@@ -58,6 +92,7 @@ def store_photo(db: Session, data: bytes, declared_type: str, kind: str = "citiz
         raise ApiError(415, "unsupported_photo_type", "That file does not look like the photo type it claims to be.")
     if not scan_for_malware(data):
         raise ApiError(422, "photo_rejected", "That photo could not be accepted.")
+    data, stored_type = sanitize_photo(data, declared_type)  # only the clean copy is ever stored
     photo_id = uuid.uuid4().hex
     storage_key = f"{photo_id}.bin"
     config.PHOTO_DIR.mkdir(parents=True, exist_ok=True)
@@ -65,7 +100,7 @@ def store_photo(db: Session, data: bytes, declared_type: str, kind: str = "citiz
         (config.PHOTO_DIR / storage_key).write_bytes(data)
     except OSError:
         raise ApiError(503, "storage_unavailable", "We could not store the photo right now. Please try again.")
-    db.add(Photo(photo_id=photo_id, kind=kind, content_type=declared_type, size_bytes=len(data), storage_key=storage_key))
+    db.add(Photo(photo_id=photo_id, kind=kind, content_type=stored_type, size_bytes=len(data), storage_key=storage_key))
     db.flush()
     return photo_id
 

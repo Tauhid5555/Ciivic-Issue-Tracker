@@ -15,7 +15,19 @@ from app.db import Base, SessionLocal, engine  # noqa: E402
 from app.main import app  # noqa: E402
 from app.platform_services import create_staff  # noqa: E402
 
-JPEG = b"\xff\xd8\xff\xe0" + b"\x00" * 64
+import io  # noqa: E402
+
+from PIL import Image  # noqa: E402
+
+
+def make_jpeg(width=16, height=8, exif=None) -> bytes:
+    out = io.BytesIO()
+    kwargs = {"exif": exif} if exif is not None else {}
+    Image.new("RGB", (width, height), (30, 120, 60)).save(out, format="JPEG", **kwargs)
+    return out.getvalue()
+
+
+JPEG = make_jpeg()
 PASSWORD = "correct-horse-battery"
 
 
