@@ -81,7 +81,10 @@ def open_report(
     db.add(report)
     db.flush()
     _append_history(db, report, "Submitted", None, "system", None)
-    platform.queue_notification(db, "acknowledgement", report.tracking_id, "Submitted", report.contact_email)
+    platform.queue_notification(
+        db, "acknowledgement", report.tracking_id, "Submitted", report.contact_email,
+        category=report.category, changed_at=report.submitted_at,
+    )
     try:
         db.commit()
     except IntegrityError:  # two requests with the same key at once
@@ -136,9 +139,11 @@ def change_status(
     _append_history(db, report, to_status, reason, "staff", staff_id)
     report.status = to_status
     report.updated_at = utcnow()
+    # "acknowledgement" is reserved for the submission email (C7); every later change, Acknowledged included,
+    # is a "status-change" email (FR5).
     platform.queue_notification(
-        db, "acknowledgement" if to_status == "Acknowledged" else "status-change",
-        report.tracking_id, to_status, report.contact_email,
+        db, "status-change", report.tracking_id, to_status, report.contact_email,
+        category=report.category, changed_at=report.updated_at,
     )
     db.commit()
     return report

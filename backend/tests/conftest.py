@@ -5,6 +5,8 @@ from pathlib import Path
 _tmp = tempfile.mkdtemp(prefix="civic-test-")
 os.environ["DATABASE_URL"] = f"sqlite:///{Path(_tmp) / 'test.db'}"
 os.environ["PHOTO_DIR"] = str(Path(_tmp) / "photos")
+os.environ["EMAIL_BACKEND"] = "log"  # tests never reach AWS; SES tests turn it on themselves inside moto
+os.environ["EMAIL_SWEEP_SECONDS"] = "0"  # no background sender, so nothing races the tests
 
 import pyotp  # noqa: E402
 import pytest  # noqa: E402

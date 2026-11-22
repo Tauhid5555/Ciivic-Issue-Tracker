@@ -4,7 +4,7 @@ import re
 from fastapi import APIRouter, BackgroundTasks, Depends, File, Form, Header, Request, Response, UploadFile
 from sqlalchemy.orm import Session
 
-from . import case_workflow as cw, config, platform_services as platform, ratelimit
+from . import case_workflow as cw, config, notifications, platform_services as platform, ratelimit
 from .db import SessionLocal, get_db
 from .errors import ApiError
 from .models import Report
@@ -15,11 +15,8 @@ EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 
 
 def _send_in_background() -> None:
-    db = SessionLocal()
-    try:
-        platform.send_pending(db)
-    finally:
-        db.close()
+    """Send the queued acknowledgement right after the answer (NFR3). Never raises (ADR-006)."""
+    notifications.send_due_safely(SessionLocal)
 
 
 def tracking_view(report: Report) -> dict:

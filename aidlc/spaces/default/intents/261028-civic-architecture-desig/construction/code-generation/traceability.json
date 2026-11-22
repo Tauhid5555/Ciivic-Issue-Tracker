@@ -1,0 +1,13 @@
+{
+  "stage": "code-generation",
+  "upstream_ids": ["FR2.3", "FR5", "FR5.1", "FR5.2", "FR5.3", "NFR3", "NFR4"],
+  "coverage": [
+    { "id": "FR2.3", "status": "OK", "target": "backend/app/email_templates.py" },
+    { "id": "FR5", "status": "OK", "target": "backend/app/notifications.py" },
+    { "id": "FR5.1", "status": "OK", "target": "backend/app/notifications.py" },
+    { "id": "FR5.2", "status": "OK", "target": "backend/app/email_templates.py" },
+    { "id": "FR5.3", "status": "OK", "target": "backend/app/email_sender.py" },
+    { "id": "NFR3", "status": "OK", "target": "backend/app/notifications.py" },
+    { "id": "NFR4", "status": "OK", "target": "backend/app/notifications.py" }
+  ]
+}

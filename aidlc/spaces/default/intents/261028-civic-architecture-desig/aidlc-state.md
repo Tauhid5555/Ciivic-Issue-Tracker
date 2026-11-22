@@ -25,7 +25,7 @@
 - **Sensors**: on (from scope classic)
 - **Learnings**: on (from scope classic)
 - **Summary Confirmation**: on (set by you)
-- **Plan Approval**: on (from scope classic)
+- **Plan Approval**: off (set by a command)
 - **Collaborators**: off (from scope classic)
 
 ## Workspace State
@@ -106,7 +106,7 @@
 - **Current Stage**: nfr-requirements
 - **Next Stage**: none
 - **Status**: Completed
-- **Last Updated**: 2026-11-19T15:06:09Z
+- **Last Updated**: 2026-11-21T21:21:40Z
 
 ## Session Resume Point
 - **Last Completed Stage**: contract-design

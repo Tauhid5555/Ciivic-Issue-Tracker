@@ -26,12 +26,39 @@ Open http://localhost:5173. Citizens use `/`; staff use `/staff`.
 
 ## Test
 
-    cd backend && .venv\Scripts\python -m pytest -q       # 49 tests
+    cd backend && .venv\Scripts\python -m pytest -q       # 75 tests
     cd frontend && npm run build                          # typecheck and build
+
+Only the email tests, with the coverage floor on the email modules:
+
+    cd backend && .venv\Scripts\python -m pytest -q tests/test_email.py --cov=app.notifications --cov=app.email_sender --cov=app.email_templates --cov-report=term-missing --cov-fail-under=80
+
+Tests never reach AWS: they use the log sender, moto and botocore's Stubber.
+
+## Email
+
+A citizen who gives an email address gets an acknowledgement when the report is received (Tracking ID, category, time, link to the tracking page) and an email on every later status change (Tracking ID, new status, time, link). Times are in Dhaka time. The email never holds the description, the photo or the address itself, and the address never appears in the logs.
+
+By default **nothing leaves the machine**: `EMAIL_BACKEND=log` writes a log line (event ID and kind only) instead of sending.
+
+To send real email through Amazon SES (API v2):
+
+| Setting | Meaning |
+|---|---|
+| `EMAIL_BACKEND=ses` | Turn SES on. |
+| `EMAIL_FROM` | The sender address. Required with `ses`; the backend refuses to start without it. It must be a verified SES identity. |
+| `AWS_REGION` | SES region, default `ap-south-1`. |
+| `SES_CONFIGURATION_SET` | Optional SES configuration set (for bounce and complaint events later). |
+| `EMAIL_SWEEP_SECONDS` | How often the background sender looks for due emails, default `5`; `0` turns it off. |
+| `EMAIL_MAX_ATTEMPTS`, `EMAIL_RETRY_BASE_SECONDS` | Retry limits, default `5` and `30`. |
+
+Credentials come from the standard AWS chain (environment variables, a profile, or the server's role). Never put keys in a file in this repository. While the SES account is in test mode ("sandbox"), SES only sends to verified addresses, so a demo needs a verified recipient.
+
+How sending works: each email request is saved in the same transaction as the report or status change, so an email outage never stops a save. The backend sends right after the request and again from a background loop every few seconds. A temporary failure (throttling, a sending pause, a 5xx answer, a network error) is tried again after 30 s, 60 s, 120 s and 240 s, then recorded as `failed`; a rejected message or unverified sender is recorded as `failed` at once. The outcome, the error code and the SES message ID are kept on the `notification_requests` row. One backend instance is assumed: a lock in the process stops the two paths sending one email twice.
 
 ## What is in this slice
 
-Requirements FR1 to FR3 (submit, Tracking ID, public tracking), FR7 and FR9 (queue, acknowledge), FR10 to FR13 (priority, status rules, resolution note, dispute), FR16 (staff accounts with a second factor), and the privacy and abuse rules in NFR6, NFR7, NFR15 and NFR16.
+Requirements FR1 to FR3 (submit, Tracking ID, public tracking), FR7 and FR9 (queue, acknowledge), FR10 to FR13 (priority, status rules, resolution note, dispute), FR16 (staff accounts with a second factor), FR2.3 and FR5 (acknowledgement and status-change emails), and the privacy and abuse rules in NFR6, NFR7, NFR15 and NFR16.
 
 ## Look and feel (citizen screens)
 
@@ -72,7 +99,7 @@ R1 and R2 come from the choice to use free public map services for the pilot; R3
 - **Map tiles:** the location map (draggable pin, FR1.3) uses OpenStreetMap's public tiles, which is fine for development only. Before real citizens use it, set `VITE_TILE_URL` and `VITE_TILE_ATTRIBUTION` to a hosted tile provider, and mention the map provider in the privacy notice (tile requests reveal the visitor's IP address and map area). See "Accepted risks for the pilot" (R1, R2) for the privacy and terms-of-use consequences.
 - **Malware scan:** the scan is a hook that accepts everything (NFR15). Photos are decoded and re-saved, which rejects files that are not real pictures, but that is not a malware scan. Do not use with real citizen photos until a scanner is connected.
 - **Magic-link history (FR4):** not built. Citizens use the Tracking ID only.
-- **Email:** notifications are queued in the same transaction as the change and marked sent, but nothing is actually emailed; the address is never logged.
+- **Email bounces and complaints:** not handled yet (needs the AWS account and an SES configuration set, Bolt 6). The SES message ID is stored on each sent notification so bounces can be matched later.
 - **Retention purge (FR17) and category/zone administration:** not built.
 - **Staff invitations:** accounts are created with `seed.py`; there is no invitation screen.
 - **Rate limits and sessions:** held in the process and the database. A second backend instance needs a shared counter store.

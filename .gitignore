@@ -33,3 +33,19 @@ backend/**/__pycache__/
 backend/.pytest_cache/
 frontend/node_modules/
 frontend/dist/
+
+# Test coverage output
+backend/.coverage
+backend/.coverage.*
+backend/htmlcov/
+backend/coverage.xml
+
+# Local secrets and logs (keys such as CONTEXT7_API_KEY and AWS credentials never go in the repo)
+.env
+.env.*
+!.env.example
+*.log
+
+# Editor and OS files
+.DS_Store
+Thumbs.db

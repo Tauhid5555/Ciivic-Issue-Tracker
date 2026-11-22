@@ -52,7 +52,8 @@ def test_notifications_queued_with_the_change_and_marked_sent(client, staff):
     client.post(f"/v1/staff/reports/{tid}/acknowledge", headers=headers)
     with SessionLocal() as db:
         rows = db.scalars(select(NotificationRequest)).all()
-        assert {n.kind for n in rows} == {"acknowledgement"}
+        # submission sends "acknowledgement"; the staff acknowledge is a status change (Bolt 7, decision 5)
+        assert sorted(n.kind for n in rows) == ["acknowledgement", "status-change"]
         assert len(rows) == 2  # on submission and on acknowledge
         assert all(n.status == "sent" for n in rows)  # background send ran
 

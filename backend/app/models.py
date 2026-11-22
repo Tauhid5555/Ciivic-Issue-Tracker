@@ -139,3 +139,15 @@ class NotificationRequest(Base):
     status: Mapped[str] = mapped_column(String(10), default="pending")  # pending | sent | failed
     attempts: Mapped[int] = mapped_column(Integer, default=0)
     created_at: Mapped[datetime] = mapped_column(UTCDateTime(), default=utcnow)
+    # Retry and outcome (contract C7, ADR-006). Empty next_attempt_at means "due now".
+    next_attempt_at: Mapped[datetime | None] = mapped_column(UTCDateTime(), nullable=True)
+    provider_message_id: Mapped[str | None] = mapped_column(String(100), nullable=True)  # matches bounces later
+    last_error_code: Mapped[str | None] = mapped_column(String(60), nullable=True)  # a code, never message text
+
+
+# Columns added to notification_requests after the table first shipped: name -> SQL type for ALTER TABLE.
+NOTIFICATION_ADDED_COLUMNS = {
+    "next_attempt_at": "DATETIME",
+    "provider_message_id": "VARCHAR(100)",
+    "last_error_code": "VARCHAR(60)",
+}

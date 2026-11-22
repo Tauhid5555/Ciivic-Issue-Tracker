@@ -5,7 +5,7 @@ from fastapi import APIRouter, BackgroundTasks, Depends, Header, Query, Request,
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
-from . import case_workflow as cw, config, platform_services as platform, ratelimit
+from . import case_workflow as cw, config, notifications, platform_services as platform, ratelimit
 from .db import SessionLocal, get_db
 from .errors import ApiError
 from .models import PRIORITIES, STATUSES, Report, StaffAccount
@@ -27,11 +27,8 @@ Staff = Annotated[StaffAccount, Depends(current_staff)]
 
 
 def _send_in_background() -> None:
-    db = SessionLocal()
-    try:
-        platform.send_pending(db)
-    finally:
-        db.close()
+    """Send the queued status-change email right after the answer (NFR4). Never raises (ADR-006)."""
+    notifications.send_due_safely(SessionLocal)
 
 
 # ----------------------------------------------------------------- C3 sign-in

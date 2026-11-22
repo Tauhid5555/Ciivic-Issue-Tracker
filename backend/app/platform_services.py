@@ -4,13 +4,11 @@ Slice notes (not yet production):
   * Photos go to a local folder; the production store is private object storage.
   * Malware scanning is a pluggable hook that accepts everything here.
   * Every stored photo is re-encoded without metadata (see sanitize_photo).
-  * Notification sending logs the notification id and kind only (never the address).
+  * Notifications (queue and send) moved to app/notifications.py in Bolt 7 and are re-exported below.
 """
 import hashlib
 import hmac
 import io
-import json
-import logging
 import os
 import secrets
 import uuid
@@ -26,14 +24,12 @@ from . import config
 from .errors import ApiError
 from .models import (
     MfaChallenge,
-    NotificationRequest,
     Photo,
     StaffAccount,
     StaffSession,
     utcnow,
 )
 
-log = logging.getLogger("notifications")
 pillow_heif.register_heif_opener()  # lets Pillow read HEIC photos
 
 
@@ -227,38 +223,5 @@ def sign_out(db: Session, token: str) -> None:
 
 
 # ------------------------------------------------------------------ Notifications
-def queue_notification(db: Session, kind: str, tracking_id: str, to_status: str, email: str | None) -> None:
-    """Written in the same transaction as the status change. Nothing is queued without an email (FR5.1)."""
-    if not email:
-        return
-    payload = {
-        "kind": kind,
-        "trackingId": tracking_id,
-        "toStatus": to_status,
-        "trackingUrl": f"{config.PUBLIC_BASE_URL}/track/{tracking_id}",
-    }
-    db.add(
-        NotificationRequest(
-            event_id=uuid.uuid4().hex,
-            kind=kind,
-            tracking_id=tracking_id,
-            recipient_email=email,
-            payload=json.dumps(payload),
-        )
-    )
-
-
-def send_pending(db: Session, max_attempts: int = 5) -> int:
-    """Send queued emails. The slice logs instead of sending; the address is never logged."""
-    sent = 0
-    rows = db.scalars(select(NotificationRequest).where(NotificationRequest.status == "pending")).all()
-    for n in rows:
-        n.attempts += 1
-        try:
-            log.info("notification %s (%s) for report %s delivered to the email service", n.notification_id, n.kind, n.tracking_id)
-            n.status = "sent"
-            sent += 1
-        except Exception:  # noqa: BLE001 - delivery failure must never break a status change
-            n.status = "failed" if n.attempts >= max_attempts else "pending"
-    db.commit()
-    return sent
+# Notifications live in app/notifications.py (Bolt 7). Re-exported here so existing callers do not change.
+from .notifications import queue_notification, send_pending  # noqa: E402,F401

@@ -26,6 +26,16 @@ SERVICE_AREA = (23.62, 90.28, 23.95, 90.55)
 TRACKING_ID_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"  # no 0/O, 1/I
 TRACKING_ID_LENGTH = 10
 
+# Email (U2 Notifications). "log" keeps every email on this machine; "ses" sends through Amazon SES (API v2).
+# No credentials live here: SES uses the standard AWS credential chain (environment, profile or the server's role).
+EMAIL_BACKEND = os.environ.get("EMAIL_BACKEND", "log").strip().lower()
+EMAIL_FROM = os.environ.get("EMAIL_FROM", "").strip()  # required when EMAIL_BACKEND is "ses"
+AWS_REGION = os.environ.get("AWS_REGION", "ap-south-1")
+SES_CONFIGURATION_SET = os.environ.get("SES_CONFIGURATION_SET", "").strip() or None
+EMAIL_SWEEP_SECONDS = float(os.environ.get("EMAIL_SWEEP_SECONDS", "5"))  # 0 turns the background sender off
+EMAIL_MAX_ATTEMPTS = int(os.environ.get("EMAIL_MAX_ATTEMPTS", "5"))
+EMAIL_RETRY_BASE_SECONDS = int(os.environ.get("EMAIL_RETRY_BASE_SECONDS", "30"))
+
 CATEGORIES = [
     ("streetlight", "Streetlight"),
     ("pothole", "Pothole"),
